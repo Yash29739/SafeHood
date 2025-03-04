@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:safehome/screens/Landing.dart';
 
@@ -72,8 +71,6 @@ import 'package:safehome/screens/Landing.dart';
 //   }
 // }
 
-import 'package:safehome/screens/login.dart';
-import 'package:safehome/screens/register.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -89,7 +86,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: LandingScreeen(),
-      // home: LogIn(),
+      // home: LogIn(),  //uncomment it for showing the login screen
       routes: {
         // 'login': (context) => const LogIn(),
         // 'register': (context) => const Register(),
