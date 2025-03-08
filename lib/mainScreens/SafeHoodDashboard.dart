@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:safehome/subScreens/community/MyTasksApp.dart';
+import 'package:safehome/subScreens/community/friend_list_screen.dart';
+import 'package:safehome/subScreens/community/in_out_screen.dart';
+import 'package:safehome/subScreens/community/upcoming_events_screen.dart';
 import 'package:safehome/subScreens/services/CommunityNoticeBoard.dart';
 import 'package:safehome/subScreens/services/CommunityRulesApp.dart';
 import 'package:safehome/subScreens/services/MaintenanceRequestsScreen.dart';
 import 'package:safehome/subScreens/services/StaffDirectoryPage.dart';
 import 'package:safehome/subScreens/services/complaint_screen.dart';
-import 'package:safehome/login_signup/login_screen.dart';
 import 'package:safehome/subScreens/community/neighbor_profile_screen.dart';
 
 // ignore: camel_case_types
@@ -74,19 +77,19 @@ class _SafeHoodDashboardState extends State<SafeHoodDashboard> {
                         _gridItem(
                           "Do-To-List",
                           Icons.checklist,
-                          LoginScreen(),
+                          MyTasksPage(),
                           context,
                         ),
                         _gridItem(
                           "IN/OUT",
                           Icons.sync_alt,
-                          LoginScreen(),
+                          InOutScreen(),
                           context,
                         ),
                         _gridItem(
                           "Friends",
                           Icons.people_alt,
-                          LoginScreen(),
+                          FriendListScreen(),
                           context,
                         ),
                         _gridItem(
@@ -98,7 +101,7 @@ class _SafeHoodDashboardState extends State<SafeHoodDashboard> {
                         _gridItem(
                           "Community Events",
                           Icons.event,
-                          CommunityNoticeBoard(),
+                          UpcomingEventsScreen(),
                           context,
                         ),
                       ]),

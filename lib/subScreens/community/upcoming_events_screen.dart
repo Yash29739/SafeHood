@@ -65,8 +65,13 @@ class UpcomingEventsScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Upcoming Events'),
+      backgroundColor: Color(0xFFF2E3FF),
+       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        toolbarHeight: 100,
+        backgroundColor: Color(0xFFCC00FF),
+        title: _buildHeader(),
+       
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -123,6 +128,34 @@ class UpcomingEventsScreen extends StatelessWidget {
           }).toList(),
         ),
       ),
+    );
+  }
+   Widget _buildHeader() {
+    return Row(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white, width: 3),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: Image.asset("assets/logo.jpg", height: 60),
+          ),
+        ),
+        // Add your logo here
+        const SizedBox(width: 10),
+        const Text(
+          "SAFE HOOD",
+          style: TextStyle(
+            fontSize: 40,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontFamily: "Merriweather",
+          ),
+        ),
+        SizedBox(height: 30),
+      ],
     );
   }
 }

@@ -13,15 +13,12 @@ class StaffDirectoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Staff Directory", style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {},
-        ),
+      backgroundColor: Color(0xFFF2E3FF),
+     appBar: AppBar(
+        automaticallyImplyLeading: false,
+        toolbarHeight: 100,
+        backgroundColor: Color(0xFFCC00FF),
+        title: _buildHeader(),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(12),
@@ -93,6 +90,34 @@ class StaffDirectoryPage extends StatelessWidget {
         label: Text(text, style: TextStyle(fontSize: 16, color: Colors.white)),
         onPressed: () {},
       ),
+    );
+  }
+   Widget _buildHeader() {
+    return Row(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white, width: 3),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: Image.asset("assets/logo.jpg", height: 60),
+          ),
+        ),
+        // Add your logo here
+        const SizedBox(width: 10),
+        const Text(
+          "SAFE HOOD",
+          style: TextStyle(
+            fontSize: 40,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontFamily: "Merriweather",
+          ),
+        ),
+        SizedBox(height: 30),
+      ],
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:safehome/login_signup/login_screen.dart';
 
 void main() {
   runApp(const SignupScreen());
@@ -69,7 +70,12 @@ class SignUpPage extends StatelessWidget {
 
                 // Submit Button
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.purple,
                     shape: RoundedRectangleBorder(
