@@ -35,19 +35,24 @@ class SignUpPage extends StatelessWidget {
             ),
             child: Column(
               children: [
-                ClipRRect(borderRadius: BorderRadius.circular(20), child: Image.asset(
-                  'assets/logo.jpg', // Change this to your actual logo path
-                  width: 120,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(
+                    'assets/logo.jpg', // Change this to your actual logo path
+                    width: 120,
+                  ),
                 ),
 
-                ),
                 // Logo
-                
                 const SizedBox(height: 10),
                 // Sign Up Text
                 const Text(
                   "Sign Up",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.purple),
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.purple,
+                  ),
                 ),
                 const SizedBox(height: 10),
 
@@ -75,21 +80,48 @@ class SignUpPage extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
-                );
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.purple,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 40,
+                      vertical: 12,
+                    ),
                   ),
                   child: const Text(
                     "Submit",
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
+                ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Already a User?'),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        'Log-In',
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -114,7 +146,10 @@ class SignUpPage extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             borderSide: const BorderSide(color: Colors.purple, width: 2),
           ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 15,
+            vertical: 10,
+          ),
         ),
       ),
     );
