@@ -85,7 +85,7 @@ class SignUpPage extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purple,
+                   
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),
                     ),
@@ -96,7 +96,7 @@ class SignUpPage extends StatelessWidget {
                   ),
                   child: const Text(
                     "Submit",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    style: TextStyle(color: Color.fromARGB(255, 130, 76, 206), fontSize: 16),
                   ),
                 ),
 
