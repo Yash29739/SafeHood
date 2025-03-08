@@ -1,5 +1,6 @@
 import 'dart:async';
-
+import 'package:page_transition/page_transition.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:safehome/login_signup/login_screen.dart';
 
@@ -27,31 +28,42 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    Timer(Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
-      );
-    });
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AnimatedSplashScreen(
       backgroundColor: Colors.purple,
-      body: Center(
+      splash: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/logo.jpg', width: 150),
-            SizedBox(height: 20),
-            Text("SafeHood"),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(30),
+              child: Image.asset('assets/logo.jpg', width: 150),
+            ),
+            SizedBox(height: 10),
+            Text(
+              "SafeHood",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 40,
+                color: Colors.white,
+              ),
+            ),
           ],
         ),
       ),
+      nextScreen: const LoginScreen(),
+      splashIconSize: 520,
+      centered: true,
+      duration: 3000,
+      splashTransition: SplashTransition.fadeTransition,
+      pageTransitionType: PageTransitionType.fade,
+      animationDuration: Duration(milliseconds: 2000),
     );
   }
 }
