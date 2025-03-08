@@ -28,18 +28,21 @@ class SignUpPage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Container(
             padding: const EdgeInsets.all(20),
-            width: 350, // Fixed width for form
+            // Fixed width for form
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
               children: [
-                // Logo
-                Image.asset(
+                ClipRRect(borderRadius: BorderRadius.circular(20), child: Image.asset(
                   'assets/logo.jpg', // Change this to your actual logo path
                   width: 120,
                 ),
+
+                ),
+                // Logo
+                
                 const SizedBox(height: 10),
                 // Sign Up Text
                 const Text(
@@ -104,11 +107,11 @@ class SignUpPage extends StatelessWidget {
         decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25),
+            borderRadius: BorderRadius.circular(10),
             borderSide: const BorderSide(color: Colors.purple),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25),
+            borderRadius: BorderRadius.circular(10),
             borderSide: const BorderSide(color: Colors.purple, width: 2),
           ),
           contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
