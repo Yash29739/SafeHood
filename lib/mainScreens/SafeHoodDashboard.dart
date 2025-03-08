@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:safehome/subScreens/community/MyTasksApp.dart';
 import 'package:safehome/subScreens/community/friend_list_screen.dart';
 import 'package:safehome/subScreens/community/in_out_screen.dart';
+import 'package:safehome/subScreens/community/todo_list_screen.dart';
 import 'package:safehome/subScreens/community/upcoming_events_screen.dart';
 import 'package:safehome/subScreens/services/CommunityNoticeBoard.dart';
 import 'package:safehome/subScreens/services/CommunityRulesApp.dart';
@@ -77,7 +77,7 @@ class _SafeHoodDashboardState extends State<SafeHoodDashboard> {
                         _gridItem(
                           "Do-To-List",
                           Icons.checklist,
-                          MyTasksPage(),
+                          TodoListScreen(),
                           context,
                         ),
                         _gridItem(
