@@ -16,35 +16,10 @@ class SafeHoodDashboard extends StatefulWidget {
 }
 
 class _SafeHoodDashboardState extends State<SafeHoodDashboard> {
-  // int _selectedIndex = 0;
-
-  // final List<Widget> _pages = [
-  //   const mainHomePage(),
-  //   const LeaveApplicationPage(),
-  //   const ProfilePage(),
-  //   settingScreen(),
-  // ];
-
-  // void _onItemTapped(int index) {
-  //   setState(() {
-  //     _selectedIndex = index;
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        toolbarHeight: 100,
-        backgroundColor: Color(0xFFCC00FF),
-        title: _buildHeader(),
-      ),
       backgroundColor: Color(0xFFF2E3FF),
-      // body: SizedBox(
-      //   height: MediaQuery.of(context).size.height - 160,
-      //   child: _pages[_selectedIndex],
-      // ),
       body: SafeArea(
         child: Column(
           children: [
@@ -136,36 +111,6 @@ class _SafeHoodDashboardState extends State<SafeHoodDashboard> {
           ],
         ),
       ),
-      bottomNavigationBar: _buildBottomNavBar(),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Row(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.white, width: 3),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(50),
-            child: Image.asset("assets/logo.jpg", height: 60),
-          ),
-        ),
-        // Add your logo here
-        const SizedBox(width: 10),
-        const Text(
-          "SAFE HOOD",
-          style: TextStyle(
-            fontSize: 40,
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontFamily: "Merriweather",
-          ),
-        ),
-        SizedBox(height: 30),
-      ],
     );
   }
 
@@ -248,33 +193,6 @@ class _SafeHoodDashboardState extends State<SafeHoodDashboard> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildBottomNavBar() {
-    return BottomNavigationBar(
-      selectedItemColor: Colors.purple[700],
-      unselectedItemColor: Colors.black,
-      // currentIndex: _selectedIndex,
-      // onTap: _onItemPressed,
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home, size: 30),
-          label: "Home",
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.chat, size: 30),
-          label: "Chat",
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.shopping_cart, size: 30),
-          label: "Shop",
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person, size: 30),
-          label: "Profile",
-        ),
-      ],
     );
   }
 }

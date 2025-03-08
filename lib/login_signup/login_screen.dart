@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:safehome/mainScreens/LandingScreen.dart';
 import 'package:safehome/mainScreens/SafeHoodDashboard.dart';
 import 'signup_screen.dart';
 
@@ -54,9 +55,7 @@ class LoginScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const SafeHoodDashboard(),
-                  ),
+                  MaterialPageRoute(builder: (context) => LandingScreen()),
                 );
               },
               child: const Text('Login'),
