@@ -25,18 +25,17 @@ class CommunityRulesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFF2E3FF),
       appBar: AppBar(
-        title: const Text('Community Rules', style: TextStyle(fontWeight: FontWeight.bold)),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {},
-        ),
+        automaticallyImplyLeading: false,
+        toolbarHeight: 100,
+        backgroundColor: Color(0xFFCC00FF),
+        title: _buildHeader(),
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildHeader(),
             _buildRuleCard(Icons.volume_up, 'Quiet Hours',
                 '10:00 PM - 7:00 AM daily\nPlease be mindful of noise levels during these hours.'),
             _buildRuleCard(Icons.local_parking, 'Parking Regulations',
@@ -57,28 +56,32 @@ class CommunityRulesPage extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      margin: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: const [
-          Text(
-            'Important Guidelines',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+   Widget _buildHeader() {
+    return Row(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white, width: 3),
           ),
-          SizedBox(height: 5),
-          Text(
-            'Please familiarize yourself with these community rules to ensure a pleasant living environment for all residents.',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14, color: Colors.black54),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: Image.asset("assets/logo.jpg", height: 60),
           ),
-        ],
-      ),
+        ),
+        // Add your logo here
+        const SizedBox(width: 10),
+        const Text(
+          "SAFE HOOD",
+          style: TextStyle(
+            fontSize: 40,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontFamily: "Merriweather",
+          ),
+        ),
+        SizedBox(height: 30),
+      ],
     );
   }
 
