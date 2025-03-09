@@ -60,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
       nextScreen: const LoginScreen(),
       splashIconSize: 520,
       centered: true,
-      duration: 3000,
+      duration: 2000,
       splashTransition: SplashTransition.fadeTransition,
       pageTransitionType: PageTransitionType.fade,
       animationDuration: Duration(milliseconds: 2000),

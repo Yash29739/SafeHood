@@ -15,31 +15,31 @@ class _NearByShopsState extends State<NearByShops> {
       "name": "ABC Supermarket",
       "location": "MG Road",
       "contact": "9876543210",
-      "hours": "8 AM - 9 PM"
+      "hours": "8 AM - 9 PM",
     },
     {
       "name": "Fresh Mart",
       "location": "Brigade Road",
       "contact": "9876504321",
-      "hours": "7 AM - 10 PM"
+      "hours": "7 AM - 10 PM",
     },
     {
       "name": "City Store",
       "location": "Indiranagar",
       "contact": "9876123456",
-      "hours": "9 AM - 8 PM"
+      "hours": "9 AM - 8 PM",
     },
     {
       "name": "Quick Buy",
       "location": "Koramangala",
       "contact": "9876234567",
-      "hours": "6 AM - 11 PM"
+      "hours": "6 AM - 11 PM",
     },
     {
       "name": "Daily Needs",
       "location": "Jayanagar",
       "contact": "9876345678",
-      "hours": "8 AM - 9 PM"
+      "hours": "8 AM - 9 PM",
     },
   ];
 
@@ -54,11 +54,16 @@ class _NearByShopsState extends State<NearByShops> {
   // Function to filter shops based on search
   void _filterShops(String query) {
     setState(() {
-      filteredShops = shops
-          .where((shop) =>
-              shop["name"]!.toLowerCase().contains(query.toLowerCase()) ||
-              shop["location"]!.toLowerCase().contains(query.toLowerCase()))
-          .toList();
+      filteredShops =
+          shops
+              .where(
+                (shop) =>
+                    shop["name"]!.toLowerCase().contains(query.toLowerCase()) ||
+                    shop["location"]!.toLowerCase().contains(
+                      query.toLowerCase(),
+                    ),
+              )
+              .toList();
     });
   }
 
@@ -131,8 +136,18 @@ class _NearByShopsState extends State<NearByShops> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Nearby Shops"),
-        backgroundColor: Colors.purple,
+        centerTitle: true,
+        title: const Text(
+          "Nearby Shops",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontFamily: "Merriweather",
+            fontSize: 28,
+            color: Color(0xFF77008B),
+          ),
+        ),
+        automaticallyImplyLeading: false,
+        backgroundColor: Color(0x13A100AF),
       ),
       body: Column(
         children: [
@@ -155,7 +170,10 @@ class _NearByShopsState extends State<NearByShops> {
               itemCount: filteredShops.length,
               itemBuilder: (context, index) {
                 return Card(
-                  margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
                   elevation: 3,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -175,7 +193,11 @@ class _NearByShopsState extends State<NearByShops> {
                         const SizedBox(height: 5),
                         Row(
                           children: [
-                            const Icon(Icons.location_on, color: Color.fromARGB(255, 175, 139, 220), size: 18),
+                            const Icon(
+                              Icons.location_on,
+                              color: Color.fromARGB(255, 175, 139, 220),
+                              size: 18,
+                            ),
                             const SizedBox(width: 5),
                             Text(filteredShops[index]["location"]!),
                           ],
@@ -183,7 +205,11 @@ class _NearByShopsState extends State<NearByShops> {
                         const SizedBox(height: 5),
                         Row(
                           children: [
-                            const Icon(Icons.phone, color: Colors.green, size: 18),
+                            const Icon(
+                              Icons.phone,
+                              color: Colors.green,
+                              size: 18,
+                            ),
                             const SizedBox(width: 5),
                             Text(filteredShops[index]["contact"]!),
                           ],
@@ -191,7 +217,11 @@ class _NearByShopsState extends State<NearByShops> {
                         const SizedBox(height: 5),
                         Row(
                           children: [
-                            const Icon(Icons.access_time, color: Colors.blue, size: 18),
+                            const Icon(
+                              Icons.access_time,
+                              color: Colors.blue,
+                              size: 18,
+                            ),
                             const SizedBox(width: 5),
                             Text(filteredShops[index]["hours"]!),
                           ],
@@ -200,7 +230,10 @@ class _NearByShopsState extends State<NearByShops> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: IconButton(
-                            icon: const Icon(Icons.delete, color: Color.fromARGB(255, 178, 144, 220)),
+                            icon: const Icon(
+                              Icons.delete,
+                              color: Color.fromARGB(255, 178, 144, 220),
+                            ),
                             onPressed: () {
                               setState(() {
                                 shops.removeAt(index);

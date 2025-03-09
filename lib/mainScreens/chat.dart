@@ -18,7 +18,7 @@ class _ApartmentChatScreenState extends State<ApartmentChatScreen> {
         messages.add({
           "user": "You", // Can be replaced with actual user name
           "message": _messageController.text,
-          "time": "${TimeOfDay.now().hour}:${TimeOfDay.now().minute}"
+          "time": "${TimeOfDay.now().hour}:${TimeOfDay.now().minute}",
         });
       });
       _messageController.clear();
@@ -29,18 +29,18 @@ class _ApartmentChatScreenState extends State<ApartmentChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Apartment Group Chat"),
-        backgroundColor: Colors.purple,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("More options coming soon!")),
-              );
-            },
+        centerTitle: true,
+        title: const Text(
+          "Appartment Group Chat",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontFamily: "Merriweather",
+            fontSize: 28,
+            color: Color(0xFF77008B),
           ),
-        ],
+        ),
+        automaticallyImplyLeading: false,
+        backgroundColor: Color(0x13A100AF),
       ),
       body: Column(
         children: [
@@ -50,16 +50,18 @@ class _ApartmentChatScreenState extends State<ApartmentChatScreen> {
               itemCount: messages.length,
               itemBuilder: (context, index) {
                 return Align(
-                  alignment: messages[index]["user"] == "You"
-                      ? Alignment.centerRight
-                      : Alignment.centerLeft,
+                  alignment:
+                      messages[index]["user"] == "You"
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
                   child: Container(
                     margin: const EdgeInsets.symmetric(vertical: 5),
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: messages[index]["user"] == "You"
-                          ? Colors.purple[100]
-                          : Colors.grey[300],
+                      color:
+                          messages[index]["user"] == "You"
+                              ? Colors.purple[100]
+                              : Colors.grey[300],
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Column(
@@ -69,9 +71,10 @@ class _ApartmentChatScreenState extends State<ApartmentChatScreen> {
                           messages[index]["user"]!,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: messages[index]["user"] == "You"
-                                ? Colors.purple
-                                : Colors.black,
+                            color:
+                                messages[index]["user"] == "You"
+                                    ? Colors.purple
+                                    : Colors.black,
                           ),
                         ),
                         const SizedBox(height: 5),
@@ -102,7 +105,9 @@ class _ApartmentChatScreenState extends State<ApartmentChatScreen> {
                   icon: const Icon(Icons.attach_file, color: Colors.purple),
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Attach file feature coming soon!")),
+                      const SnackBar(
+                        content: Text("Attach file feature coming soon!"),
+                      ),
                     );
                   },
                 ),

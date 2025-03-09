@@ -18,7 +18,7 @@ class _LandingScreenState extends State<LandingScreen> {
     const SafeHoodDashboard(),
     const ApartmentChatScreen(),
     const NearByShops(),
-    const ApartmentProfileScreen(),
+    const ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -32,7 +32,7 @@ class _LandingScreenState extends State<LandingScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        toolbarHeight: 100,
+        toolbarHeight: 80,
         backgroundColor: Color(0xFFCC00FF),
         title: _buildHeader(),
       ),
