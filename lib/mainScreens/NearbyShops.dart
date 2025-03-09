@@ -9,12 +9,38 @@ class NearByShops extends StatefulWidget {
 
 class _NearByShopsState extends State<NearByShops> {
   final TextEditingController _searchController = TextEditingController();
+
   List<Map<String, String>> shops = [
-    {"name": "ABC Supermarket", "location": "MG Road"},
-    {"name": "Fresh Mart", "location": "Brigade Road"},
-    {"name": "City Store", "location": "Indiranagar"},
-    {"name": "Quick Buy", "location": "Koramangala"},
-    {"name": "Daily Needs", "location": "Jayanagar"},
+    {
+      "name": "ABC Supermarket",
+      "location": "MG Road",
+      "contact": "9876543210",
+      "hours": "8 AM - 9 PM"
+    },
+    {
+      "name": "Fresh Mart",
+      "location": "Brigade Road",
+      "contact": "9876504321",
+      "hours": "7 AM - 10 PM"
+    },
+    {
+      "name": "City Store",
+      "location": "Indiranagar",
+      "contact": "9876123456",
+      "hours": "9 AM - 8 PM"
+    },
+    {
+      "name": "Quick Buy",
+      "location": "Koramangala",
+      "contact": "9876234567",
+      "hours": "6 AM - 11 PM"
+    },
+    {
+      "name": "Daily Needs",
+      "location": "Jayanagar",
+      "contact": "9876345678",
+      "hours": "8 AM - 9 PM"
+    },
   ];
 
   List<Map<String, String>> filteredShops = [];
@@ -36,10 +62,12 @@ class _NearByShopsState extends State<NearByShops> {
     });
   }
 
-  // Function to handle FAB click
+  // Function to add a new shop
   void _addShopDialog() {
     TextEditingController nameController = TextEditingController();
     TextEditingController locationController = TextEditingController();
+    TextEditingController contactController = TextEditingController();
+    TextEditingController hoursController = TextEditingController();
 
     showDialog(
       context: context,
@@ -57,6 +85,15 @@ class _NearByShopsState extends State<NearByShops> {
                 controller: locationController,
                 decoration: const InputDecoration(labelText: "Location"),
               ),
+              TextField(
+                controller: contactController,
+                decoration: const InputDecoration(labelText: "Contact Number"),
+                keyboardType: TextInputType.phone,
+              ),
+              TextField(
+                controller: hoursController,
+                decoration: const InputDecoration(labelText: "Opening Hours"),
+              ),
             ],
           ),
           actions: [
@@ -67,11 +104,15 @@ class _NearByShopsState extends State<NearByShops> {
             ElevatedButton(
               onPressed: () {
                 if (nameController.text.isNotEmpty &&
-                    locationController.text.isNotEmpty) {
+                    locationController.text.isNotEmpty &&
+                    contactController.text.isNotEmpty &&
+                    hoursController.text.isNotEmpty) {
                   setState(() {
                     shops.add({
                       "name": nameController.text,
-                      "location": locationController.text
+                      "location": locationController.text,
+                      "contact": contactController.text,
+                      "hours": hoursController.text,
                     });
                     filteredShops = shops;
                   });
@@ -115,17 +156,60 @@ class _NearByShopsState extends State<NearByShops> {
               itemBuilder: (context, index) {
                 return Card(
                   margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  child: ListTile(
-                    title: Text(filteredShops[index]["name"]!),
-                    subtitle: Text("📍 ${filteredShops[index]["location"]!}"),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () {
-                        setState(() {
-                          shops.removeAt(index);
-                          filteredShops = shops;
-                        });
-                      },
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          filteredShops[index]["name"]!,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Row(
+                          children: [
+                            const Icon(Icons.location_on, color: Color.fromARGB(255, 175, 139, 220), size: 18),
+                            const SizedBox(width: 5),
+                            Text(filteredShops[index]["location"]!),
+                          ],
+                        ),
+                        const SizedBox(height: 5),
+                        Row(
+                          children: [
+                            const Icon(Icons.phone, color: Colors.green, size: 18),
+                            const SizedBox(width: 5),
+                            Text(filteredShops[index]["contact"]!),
+                          ],
+                        ),
+                        const SizedBox(height: 5),
+                        Row(
+                          children: [
+                            const Icon(Icons.access_time, color: Colors.blue, size: 18),
+                            const SizedBox(width: 5),
+                            Text(filteredShops[index]["hours"]!),
+                          ],
+                        ),
+                        const Divider(thickness: 1),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: IconButton(
+                            icon: const Icon(Icons.delete, color: Color.fromARGB(255, 178, 144, 220)),
+                            onPressed: () {
+                              setState(() {
+                                shops.removeAt(index);
+                                filteredShops = shops;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 );

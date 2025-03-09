@@ -16,9 +16,9 @@ class _LandingScreenState extends State<LandingScreen> {
 
   final List<Widget> _pages = [
     const SafeHoodDashboard(),
-    const ChatRoom(),
+    const ApartmentChatScreen(),
     const NearByShops(),
-    const Profile(),
+    const ApartmentProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
