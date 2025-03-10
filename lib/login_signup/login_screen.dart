@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:safehome/login_signup/forgotPassword.dart';
 import 'package:safehome/mainScreens/LandingScreen.dart';
-import 'package:safehome/mainScreens/SafeHoodDashboard.dart';
 import 'signup_screen.dart';
 
 class LoginScreen extends StatelessWidget {
