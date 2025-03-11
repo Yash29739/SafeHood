@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:safehome/mainScreens/NearbyShops.dart';
-import 'package:safehome/mainScreens/Profile.dart';
-import 'package:safehome/mainScreens/SafeHoodDashboard.dart';
-import 'package:safehome/mainScreens/chat.dart';
+import 'package:safehood/mainScreens/NearbyShops.dart';
+import 'package:safehood/mainScreens/Profile.dart';
+import 'package:safehood/mainScreens/SafeHoodDashboard.dart';
+import 'package:safehood/mainScreens/chat.dart';
 
 class LandingScreen extends StatefulWidget {
   const LandingScreen({super.key});

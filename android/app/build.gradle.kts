@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.safehome"
+    namespace = "com.example.safehood"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 

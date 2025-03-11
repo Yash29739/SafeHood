@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:safehome/subScreens/community/friend_list_screen.dart';
-import 'package:safehome/subScreens/community/in_out_screen.dart';
-import 'package:safehome/subScreens/community/todo_list_screen.dart';
-import 'package:safehome/subScreens/community/upcoming_events_screen.dart';
-import 'package:safehome/subScreens/services/CommunityNoticeBoard.dart';
-import 'package:safehome/subScreens/services/CommunityRulesApp.dart';
-import 'package:safehome/subScreens/services/MaintenanceRequestsScreen.dart';
-import 'package:safehome/subScreens/services/StaffDirectoryPage.dart';
-import 'package:safehome/subScreens/services/complaint_screen.dart';
-import 'package:safehome/subScreens/community/neighbor_profile_screen.dart';
+import 'package:safehood/subScreens/community/friend_list_screen.dart';
+import 'package:safehood/subScreens/community/in_out_screen.dart';
+import 'package:safehood/subScreens/community/todo_list_screen.dart';
+import 'package:safehood/subScreens/community/upcoming_events_screen.dart';
+import 'package:safehood/subScreens/services/CommunityNoticeBoard.dart';
+import 'package:safehood/subScreens/services/CommunityRulesApp.dart';
+import 'package:safehood/subScreens/services/MaintenanceRequestsScreen.dart';
+import 'package:safehood/subScreens/services/StaffDirectoryPage.dart';
+import 'package:safehood/subScreens/services/complaint_screen.dart';
+import 'package:safehood/subScreens/community/neighbor_profile_screen.dart';
 
 // ignore: camel_case_types
 class SafeHoodDashboard extends StatefulWidget {
