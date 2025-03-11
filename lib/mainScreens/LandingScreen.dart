@@ -18,7 +18,7 @@ class _LandingScreenState extends State<LandingScreen> {
     const SafeHoodDashboard(),
     const ApartmentChatScreen(),
     const NearByShops(),
-    const ProfileScreen(),
+    const ApartmentProfileScreen(),
   ];
 
   void _onItemTapped(int index) {

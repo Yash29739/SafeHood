@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:safehome/subScreens/community/friend_list_screen.dart';
 import 'package:safehome/subScreens/community/in_out_screen.dart';
-import 'package:safehome/subScreens/community/todo_list_screen.dart';
 import 'package:safehome/subScreens/community/upcoming_events_screen.dart';
 import 'package:safehome/subScreens/services/CommunityNoticeBoard.dart';
 import 'package:safehome/subScreens/services/CommunityRulesApp.dart';
@@ -9,8 +8,8 @@ import 'package:safehome/subScreens/services/MaintenanceRequestsScreen.dart';
 import 'package:safehome/subScreens/services/StaffDirectoryPage.dart';
 import 'package:safehome/subScreens/services/complaint_screen.dart';
 import 'package:safehome/subScreens/community/neighbor_profile_screen.dart';
+import 'package:safehome/subScreens/todo_list_screen.dart';
 
-// ignore: camel_case_types
 class SafeHoodDashboard extends StatefulWidget {
   const SafeHoodDashboard({super.key});
 
@@ -22,7 +21,7 @@ class _SafeHoodDashboardState extends State<SafeHoodDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF2E3FF),
+      backgroundColor: const Color(0xFFF2E3FF),
       body: SafeArea(
         child: Column(
           children: [
@@ -42,31 +41,31 @@ class _SafeHoodDashboardState extends State<SafeHoodDashboard> {
                         _gridItem(
                           "File a Complaint",
                           Icons.report_problem,
-                          ComplaintScreen(),
+                          const ComplaintScreen(),
                           context,
                         ),
                         _gridItem(
                           "Maintenance",
                           Icons.build,
-                          MaintenanceRequestsScreen(),
+                          const MaintenanceRequestsScreen(),
                           context,
                         ),
                         _gridItem(
                           "Community Notice Board",
                           Icons.dashboard,
-                          CommunityNoticeBoard(),
+                          const CommunityNoticeBoard(),
                           context,
                         ),
                         _gridItem(
                           "Staffs",
                           Icons.people,
-                          StaffDirectoryPage(),
+                          const StaffDirectoryPage(),
                           context,
                         ),
                         _gridItem(
                           "Community Rules",
                           Icons.article,
-                          CommunityRulesApp(),
+                          const CommunityRulesApp(),
                           context,
                         ),
                       ]),
@@ -75,7 +74,7 @@ class _SafeHoodDashboardState extends State<SafeHoodDashboard> {
                       const SizedBox(height: 10),
                       _buildGrid([
                         _gridItem(
-                          "Do-To-List",
+                          "To-Do List",
                           Icons.checklist,
                           TodoListScreen(),
                           context,
@@ -83,7 +82,7 @@ class _SafeHoodDashboardState extends State<SafeHoodDashboard> {
                         _gridItem(
                           "IN/OUT",
                           Icons.sync_alt,
-                          InOutScreen(),
+                          const InOutScreen(),
                           context,
                         ),
                         _gridItem(
@@ -101,7 +100,7 @@ class _SafeHoodDashboardState extends State<SafeHoodDashboard> {
                         _gridItem(
                           "Community Events",
                           Icons.event,
-                          UpcomingEventsScreen(),
+                          const MyApp(),
                           context,
                         ),
                       ]),
@@ -178,10 +177,10 @@ class _SafeHoodDashboardState extends State<SafeHoodDashboard> {
         Navigator.push(context, MaterialPageRoute(builder: (context) => nav));
       },
       style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.all(15), // Adjust padding if needed
-        backgroundColor: Colors.white, // Set button background color
+        padding: const EdgeInsets.all(15),
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10), // Rounded corners
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
       child: Column(

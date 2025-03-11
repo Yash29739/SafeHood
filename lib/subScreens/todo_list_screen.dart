@@ -1,15 +1,13 @@
-// TODO Implement this library.import 'package:flutter/material.dart';
-
 import 'package:flutter/material.dart';
 
 class TodoListScreen extends StatefulWidget {
   const TodoListScreen({super.key});
 
   @override
-  State<TodoListScreen> createState() => _TodoListScreenState();
+  State<TodoListScreen> createState() => TodoApp();
 }
 
-class _TodoListScreenState extends State<TodoListScreen> {
+class TodoApp extends State<TodoListScreen> {
   final TextEditingController _taskController = TextEditingController();
   List<Map<String, dynamic>> tasks = []; // Holds task data
 

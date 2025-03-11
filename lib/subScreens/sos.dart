@@ -1,42 +1,27 @@
 import 'package:flutter/material.dart';
 
-class SOSPage extends StatefulWidget {
-  const SOSPage({super.key});
+class SOSScreen extends StatefulWidget {
+  final Function(String) sendMessageToChat; // Function to send messages to chat
+
+  const SOSScreen({super.key, required this.sendMessageToChat});
 
   @override
-  State<SOSPage> createState() => _SOSPageState();
+  State<SOSScreen> createState() => _SOSScreenState();
 }
 
-class _SOSPageState extends State<SOSPage> {
-  // Function to send the SOS message
-  void _sendSOSMessage() {
-    // Simulate sending message to Watchman and Group Chat
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("SOS Alert sent to Watchman & Group Chat! 🚨")),
-    );
-  }
+class _SOSScreenState extends State<SOSScreen> {
+  // Function to send SOS message
+  void _sendSOS() {
+    String sosMessage = "🚨 Emergency Alert! A resident needs immediate help!";
 
-  // Function to show confirmation dialog before sending SOS
-  void _confirmSOS() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Confirm SOS"),
-        content: const Text("Are you sure you want to send an SOS alert?"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _sendSOSMessage();
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text("Send SOS", style: TextStyle(color: Colors.white)),
-          ),
-        ],
+    // Send the message to the apartment chat screen
+    widget.sendMessageToChat(sosMessage);
+
+    // Show confirmation
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("🚨 SOS Sent! Apartment Group Notified."),
+        backgroundColor: Colors.red,
       ),
     );
   }
@@ -46,36 +31,25 @@ class _SOSPageState extends State<SOSPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Emergency SOS"),
-        backgroundColor: Colors.purple,
+        backgroundColor: Colors.red,
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              "Press the SOS button in case of an emergency.",
-              textAlign: TextAlign.center,
+              "Press the button in case of emergency!",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-
-            // SOS Button
-            ElevatedButton(
-              onPressed: _confirmSOS,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            FloatingActionButton.extended(
+              onPressed: _sendSOS,
+              backgroundColor: Colors.red,
+              icon: const Icon(Icons.sos, color: Colors.white, size: 30),
+              label: const Text(
+                "Send SOS",
+                style: TextStyle(color: Colors.white, fontSize: 18),
               ),
-              child: const Text("SEND SOS 🚨", style: TextStyle(fontSize: 20, color: Colors.white)),
-            ),
-            const SizedBox(height: 30),
-
-            // Message indicating where SOS is sent
-            const Text(
-              "Your SOS alert will be sent to:\n- Watchman\n- Apartment Group Chat",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ],
         ),

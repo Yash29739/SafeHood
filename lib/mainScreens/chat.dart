@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:safehome/subScreens/sos.dart';
+// Import the SOS Screen
 
 class ApartmentChatScreen extends StatefulWidget {
   const ApartmentChatScreen({super.key});
@@ -12,17 +14,28 @@ class _ApartmentChatScreenState extends State<ApartmentChatScreen> {
   List<Map<String, String>> messages = [];
 
   // Function to send a new message
-  void _sendMessage() {
-    if (_messageController.text.isNotEmpty) {
+  void _sendMessage(String text) {
+    if (text.isNotEmpty) {
       setState(() {
         messages.add({
-          "user": "You", // Can be replaced with actual user name
-          "message": _messageController.text,
+          "user": "You",
+          "message": text,
           "time": "${TimeOfDay.now().hour}:${TimeOfDay.now().minute}",
         });
       });
       _messageController.clear();
     }
+  }
+
+  // Function to receive SOS messages from SOS screen
+  void _receiveSOSMessage(String sosMessage) {
+    setState(() {
+      messages.add({
+        "user": "🚨 SOS Alert",
+        "message": sosMessage,
+        "time": "${TimeOfDay.now().hour}:${TimeOfDay.now().minute}",
+      });
+    });
   }
 
   @override
@@ -31,16 +44,14 @@ class _ApartmentChatScreenState extends State<ApartmentChatScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
-          "Appartment Group Chat",
+          "Apartment Group Chat",
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontFamily: "Merriweather",
-            fontSize: 28,
-            color: Color(0xFF77008B),
+            fontSize: 24,
+            color: Colors.white,
           ),
         ),
-        automaticallyImplyLeading: false,
-        backgroundColor: Color(0x13A100AF),
+        backgroundColor: Colors.purple,
       ),
       body: Column(
         children: [
@@ -50,18 +61,16 @@ class _ApartmentChatScreenState extends State<ApartmentChatScreen> {
               itemCount: messages.length,
               itemBuilder: (context, index) {
                 return Align(
-                  alignment:
-                      messages[index]["user"] == "You"
-                          ? Alignment.centerRight
-                          : Alignment.centerLeft,
+                  alignment: messages[index]["user"] == "You"
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
                   child: Container(
                     margin: const EdgeInsets.symmetric(vertical: 5),
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color:
-                          messages[index]["user"] == "You"
-                              ? Colors.purple[100]
-                              : Colors.grey[300],
+                      color: messages[index]["user"] == "You"
+                          ? Colors.purple[100]
+                          : Colors.grey[300],
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Column(
@@ -71,10 +80,9 @@ class _ApartmentChatScreenState extends State<ApartmentChatScreen> {
                           messages[index]["user"]!,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color:
-                                messages[index]["user"] == "You"
-                                    ? Colors.purple
-                                    : Colors.black,
+                            color: messages[index]["user"] == "You"
+                                ? Colors.purple
+                                : Colors.red,
                           ),
                         ),
                         const SizedBox(height: 5),
@@ -124,7 +132,7 @@ class _ApartmentChatScreenState extends State<ApartmentChatScreen> {
                 ),
                 const SizedBox(width: 10),
                 FloatingActionButton(
-                  onPressed: _sendMessage,
+                  onPressed: () => _sendMessage(_messageController.text),
                   backgroundColor: Colors.purple,
                   child: const Icon(Icons.send, color: Colors.white),
                 ),
@@ -132,6 +140,19 @@ class _ApartmentChatScreenState extends State<ApartmentChatScreen> {
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SOSScreen(sendMessageToChat: _receiveSOSMessage),
+            ),
+          );
+        },
+        backgroundColor: Colors.red,
+        icon: const Icon(Icons.sos, color: Colors.white, size: 30),
+        label: const Text("SOS", style: TextStyle(color: Colors.white)),
       ),
     );
   }
