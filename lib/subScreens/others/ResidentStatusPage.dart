@@ -92,7 +92,6 @@ class ResidentStatusPage extends StatelessWidget {
 
   Widget _residentTile(String name, String apt, Color statusColor, String status) {
     return Card(
-      color: statusColor.withOpacity(0.2),
       margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: ListTile(

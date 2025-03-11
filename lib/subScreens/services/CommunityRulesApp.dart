@@ -89,7 +89,6 @@ class CommunityRulesPage extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      color: color?.withOpacity(0.1),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
