@@ -61,7 +61,6 @@ class StaffDirectoryPage extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: color.withOpacity(0.8),
           child: Icon(Icons.person, color: Colors.white),
         ),
         title: Text(name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
