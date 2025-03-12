@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "698445325272",
-    "project_id": "safehome-f3bc2",
-    "storage_bucket": "safehome-f3bc2.firebasestorage.app"
+    "project_number": "907509495254",
+    "project_id": "safehood-dce5e",
+    "storage_bucket": "safehood-dce5e.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:698445325272:android:5fa466ec75d29e893448ad",
+        "mobilesdk_app_id": "1:907509495254:android:d478f7c1f506138c80e077",
         "android_client_info": {
-          "package_name": "safehood.v1"
+          "package_name": "com.example.safehome"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDPMgAlq8frjkIMEQur_PVzlE2OLHXWztI"
+          "current_key": "AIzaSyCFYbJxDeoRh-XP5ySaEHRufc_UdnmfKb4"
         }
       ],
       "services": {
