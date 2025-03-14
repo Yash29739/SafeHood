@@ -3,134 +3,160 @@ import 'package:flutter/material.dart';
 class Event {
   final String title;
   final String description;
-  final String category; // E.g., Age, Skill, etc.
+  final String category;
   final String date;
+  final String location;
 
   Event({
     required this.title,
     required this.description,
     required this.category,
     required this.date,
+    required this.location,
   });
 }
 
-class UpcomingEventsScreen extends StatelessWidget {
-  // Removed the 'const' keyword here
-  UpcomingEventsScreen({super.key});
+class UpcomingEventsScreen extends StatefulWidget {
+  const UpcomingEventsScreen({super.key});
 
-  // Sample events data
-  final List<Event> events = [
-    Event(
-      title: 'Yoga for Beginners',
-      description: 'A beginner-friendly yoga session.',
-      category: 'Skill',
-      date: '2025-03-20',
-    ),
-    Event(
-      title: 'Art Class for Kids',
-      description: 'An art class for children to explore creativity.',
-      category: 'Age: Kids',
-      date: '2025-03-22',
-    ),
-    Event(
-      title: 'Web Development Bootcamp',
-      description: 'An intensive coding bootcamp for aspiring web developers.',
-      category: 'Skill',
-      date: '2025-03-25',
-    ),
-    Event(
-      title: 'Cooking Class for Teens',
-      description: 'Learn to cook delicious meals in this fun class.',
-      category: 'Age: Teens',
-      date: '2025-03-27',
-    ),
-    Event(
-      title: 'Senior Fitness Class',
-      description: 'A fitness class designed specifically for seniors.',
-      category: 'Age: Seniors',
-      date: '2025-03-30',
-    ),
-  ];
+  @override
+  _UpcomingEventsScreenState createState() => _UpcomingEventsScreenState();
+}
+
+class _UpcomingEventsScreenState extends State<UpcomingEventsScreen> {
+  final List<Event> events = [];
+
+  void _addEvent() {
+    TextEditingController titleController = TextEditingController();
+    TextEditingController descriptionController = TextEditingController();
+    TextEditingController categoryController = TextEditingController();
+    TextEditingController locationController = TextEditingController();
+    DateTime selectedDate = DateTime.now();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Add New Event"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(controller: titleController, decoration: const InputDecoration(labelText: "Title")),
+              TextField(controller: descriptionController, decoration: const InputDecoration(labelText: "Description")),
+              TextField(controller: categoryController, decoration: const InputDecoration(labelText: "Category")),
+              TextField(controller: locationController, decoration: const InputDecoration(labelText: "Location")),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () async {
+                  DateTime? picked = await showDatePicker(
+                    context: context,
+                    initialDate: selectedDate,
+                    firstDate: DateTime(2020),
+                    lastDate: DateTime(2030),
+                  );
+                  if (picked != null) {
+                    setState(() {
+                      selectedDate = picked;
+                    });
+                  }
+                },
+                child: Text("Select Date: ${selectedDate.toLocal()}".split(' ')[0]),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  events.add(Event(
+                    title: titleController.text,
+                    description: descriptionController.text,
+                    category: categoryController.text,
+                    date: "${selectedDate.toLocal()}".split(' ')[0],
+                    location: locationController.text,
+                  ));
+                });
+                Navigator.pop(context);
+              },
+              child: const Text("Add"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _deleteEvent(int index) {
+    setState(() {
+      events.removeAt(index);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Group events by category
-    Map<String, List<Event>> categorizedEvents = {};
-    for (var event in events) {
-      if (categorizedEvents.containsKey(event.category)) {
-        categorizedEvents[event.category]!.add(event);
-      } else {
-        categorizedEvents[event.category] = [event];
-      }
-    }
-
     return Scaffold(
-      backgroundColor: Color(0xFFF2E3FF),
-       appBar: AppBar(
+      backgroundColor: const Color(0xFFF2E3FF),
+      appBar: AppBar(
         automaticallyImplyLeading: false,
         toolbarHeight: 100,
-        backgroundColor: Color(0xFFCC00FF),
-        title: _buildHeader(),
-       
+        backgroundColor: const Color(0xFFCC00FF),
+        title: Column(
+          children: [
+            _buildHeader(),
+            const Text(
+              "Upcoming Events",
+              style: TextStyle(
+                fontSize: 24,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: categorizedEvents.entries.map((entry) {
-            String category = entry.key;
-            List<Event> eventList = entry.value;
-
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  category,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.purple,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                ...eventList.map((event) {
+        child: events.isEmpty
+            ? const Center(child: Text("No events available. Add one!"))
+            : ListView.builder(
+                itemCount: events.length,
+                itemBuilder: (context, index) {
+                  final event = events[index];
                   return Card(
                     margin: const EdgeInsets.symmetric(vertical: 8),
                     child: ListTile(
                       title: Text(event.title),
-                      subtitle: Text(event.description),
-                      trailing: Text(event.date),
-                      onTap: () {
-                        // Optionally, you can navigate to a detailed event screen
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Text(event.title),
-                              content: Text(event.description),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text('Close'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
+                      subtitle: Text("${event.description}\nLocation: ${event.location}"),
+                      trailing: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(event.date),
+                          IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () => _deleteEvent(index),
+                          ),
+                        ],
+                      ),
                     ),
                   );
-                }),
-                const SizedBox(height: 20),
-              ],
-            );
-          }).toList(),
-        ),
+                },
+              ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.purple,
+        onPressed: _addEvent,
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
-   Widget _buildHeader() {
+
+  Widget _buildHeader() {
     return Row(
       children: [
         Container(
@@ -143,7 +169,6 @@ class UpcomingEventsScreen extends StatelessWidget {
             child: Image.asset("assets/logo.jpg", height: 60),
           ),
         ),
-        // Add your logo here
         const SizedBox(width: 10),
         const Text(
           "SAFE HOOD",
@@ -154,8 +179,7 @@ class UpcomingEventsScreen extends StatelessWidget {
             fontFamily: "Merriweather",
           ),
         ),
-        SizedBox(height: 30),
       ],
     );
   }
-}
+} 
