@@ -60,18 +60,42 @@ class FirestoreService {
     }
   }
 
-  Future<bool> login(String email, String password) async {
+  Future<bool> login(String email, String password, context) async {
     try {
-      var userSnapshot = await _firestore.collection('users').doc(email).get();
-      if (userSnapshot.exists && userSnapshot.data()?['password'] == password) {
-        debugPrint("Login Successful");
-        return true;
-      } else {
-        debugPrint("invalid email or password");
-        return false;
-      }
-    } catch (e) {
-      debugPrint("Login Error: $e");
+      _firestore
+      .collection('users')
+      .doc(email)
+      .get()
+      .then((DocumentSnapshot docSnapshot) {
+        if (docSnapshot.exists) {
+          /// implement login logic
+          // Logic -> [get the password from the firestore ; compare the entered password with the fetched password ; 
+          //           If they match, allow the user into the homeScreen ; else, popup an error]
+
+          String fetchedPass = docSnapshot.get('password');
+          print("Fetched Password: $fetchedPass"); /// debug
+          if (password == fetchedPass) {
+            /// redirect to homeScreen
+            const successSnackBar = SnackBar(content: Text("Successful Login"));
+            ScaffoldMessenger.of(context).showSnackBar(successSnackBar);
+            return true;
+          }
+          else {
+            /// incorrect credentials
+            return false;
+          }
+        }
+        else {
+          /// document not found -> redirect to sign-up page
+          Navigator.pushNamed(context, '/signup');
+          return false;
+        }
+      });
+
+      return true;
+    }
+    catch(e) {
+      print("Error: $e");
       return false;
     }
   }
