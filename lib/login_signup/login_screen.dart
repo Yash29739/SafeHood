@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:safehome/login_signup/forgotPassword.dart';
 import 'package:safehome/mainScreens/LandingScreen.dart';
 import 'signup_screen.dart';
+import '../services/firestore_service.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  LoginScreen({super.key});
+
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +37,11 @@ class LoginScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 TextField(
+                  controller: emailController,
                   decoration: InputDecoration(
                     fillColor: Colors.white,
                     filled: true,
-                    labelText: 'Username',
+                    labelText: 'Email',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -44,17 +49,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 TextField(
-                  decoration: InputDecoration(
-                    fillColor: Colors.white,
-                    filled: true,
-                    labelText: 'Apartment-code',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                TextField(
+                  controller: passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     fillColor: Colors.white,
@@ -99,11 +94,27 @@ class LoginScreen extends StatelessWidget {
                       vertical: 12,
                     ),
                   ),
-                  onPressed: () {
-                    Navigator.push(
+                  onPressed: () async {
+                    FirestoreService inst = new FirestoreService();
+                    bool isLoggedIn = await inst.login(
+                      emailController.text,
+                      passwordController.text,
                       context,
-                      MaterialPageRoute(builder: (context) => LandingScreen()),
                     );
+
+                    if (isLoggedIn) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LandingScreen(),
+                        ),
+                      );
+                    } else {
+                      const errorSnackBar = SnackBar(
+                        content: Text("Error during Login"),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
+                    }
                   },
                   child: const Text(
                     'Login',
