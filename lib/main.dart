@@ -4,6 +4,7 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:safehome/firebase_options.dart';
 import 'package:safehome/login_signup/login_screen.dart';
+import 'package:safehome/login_signup/signup_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +22,9 @@ class MyApp extends StatelessWidget {
       title: 'Safe Hood',
       theme: ThemeData(primarySwatch: Colors.purple),
       home: SplashScreen(),
+      routes: {
+        '/signup': (context) => const SignupScreen(),
+      },
     );
   }
 }
@@ -55,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen> {
           ],
         ),
       ),
-      nextScreen: const LoginScreen(),
+      nextScreen: LoginScreen(),
       splashIconSize: 520,
       centered: true,
       duration: 2000,
