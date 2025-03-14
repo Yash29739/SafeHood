@@ -1,24 +1,82 @@
 import 'package:flutter/material.dart';
 import 'package:safehome/login_signup/login_screen.dart';
+import 'package:safehome/services/firestore_service.dart';
 
-void main() {
-  runApp(const SignupScreen());
-}
-
-class SignupScreen extends StatelessWidget {
+class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const SignUpPage(),
-    );
-  }
+  State<SignupScreen> createState() => _SignUpPage();
 }
 
-class SignUpPage extends StatelessWidget {
-  const SignUpPage({super.key});
+class _SignUpPage extends State<SignupScreen> {
+  final FirestoreService _firestoreService = FirestoreService();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController occupationController = TextEditingController();
+  final TextEditingController dobController = TextEditingController();
+  final TextEditingController ageController = TextEditingController();
+  final TextEditingController doorNumberController = TextEditingController();
+  final TextEditingController peopleCountController = TextEditingController();
+  final TextEditingController flatCodeController = TextEditingController();
+  final TextEditingController flatNameController = TextEditingController();
+  final TextEditingController phNumberController = TextEditingController();
+  final TextEditingController emergencyNumberController =
+      TextEditingController();
+  final TextEditingController emergencyContactNameController =
+      TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController residenceController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
+    );
+  }
+
+  void _showSuccess(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.green),
+    );
+  }
+
+  void handleSignUp() async {
+    if (passwordController.text != confirmPasswordController.text) {
+      _showError("Passwords do not match");
+    }
+
+    bool success = await _firestoreService.signUp(
+      nameController.text,
+      emailController.text,
+      occupationController.text,
+      dobController.text,
+      ageController.text,
+      doorNumberController.text,
+      peopleCountController.text,
+      flatCodeController.text,
+      flatNameController.text,
+      phNumberController.text,
+      emergencyNumberController.text,
+      emergencyContactNameController.text,
+      descriptionController.text,
+      residenceController.text,
+      passwordController.text,
+      confirmPasswordController.text,
+    );
+
+    if (success) {
+      _showSuccess("SignUp Successfull");
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+      );
+    } else {
+      _showError("Signup failed");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,47 +112,62 @@ class SignUpPage extends StatelessWidget {
                 const SizedBox(height: 10),
 
                 // Input Fields
-                _buildTextField("Name"),
+                _buildTextField("Name", nameController),
                 SizedBox(height: 10),
-                _buildTextField("Email ID"),
+                _buildTextField("Email ID", emailController),
                 SizedBox(height: 10),
-                _buildTextField("Occupation"),
+                _buildTextField("Occupation", occupationController),
                 SizedBox(height: 10),
-                _buildTextField("DOB (Date of Birth)"),
+                _buildTextField("DOB (Date of Birth)", dobController),
                 SizedBox(height: 10),
-                _buildTextField("Age"),
+                _buildTextField("Age", ageController),
                 SizedBox(height: 10),
-                _buildTextField("Door Number"),
+                _buildTextField("Door Number", doorNumberController),
                 SizedBox(height: 10),
-                _buildTextField("Total People Living"),
+                _buildTextField("Total People Living", peopleCountController),
                 SizedBox(height: 10),
-                _buildTextField("Flat Code"),
+                _buildTextField("Flat Code", flatCodeController),
                 SizedBox(height: 10),
-                _buildTextField("Flat Name"),
+                _buildTextField("Flat Name", flatNameController),
                 SizedBox(height: 10),
-                _buildTextField("Phone Number"),
+                _buildTextField("Phone Number", phNumberController),
                 SizedBox(height: 10),
-                _buildTextField("Emergency Phone Number"),
+                _buildTextField(
+                  "Emergency Phone Number",
+                  emergencyNumberController,
+                ),
                 SizedBox(height: 10),
-                _buildTextField("Emergency Contact Name"),
+                _buildTextField(
+                  "Emergency Contact Name",
+                  emergencyContactNameController,
+                ),
                 SizedBox(height: 10),
-                _buildTextField("Description About Yourself"),
+                _buildTextField(
+                  "Description About Yourself",
+                  descriptionController,
+                ),
                 SizedBox(height: 10),
-                _buildTextField("Original Place of Residence"),
+                _buildTextField(
+                  "Original Place of Residence",
+                  residenceController,
+                ),
                 SizedBox(height: 10),
-                _buildTextField("Password", obscureText: true),
+                _buildTextField(
+                  "Password",
+                  passwordController,
+                  obscureText: true,
+                ),
                 SizedBox(height: 10),
-                _buildTextField("Confirm Password", obscureText: true),
+                _buildTextField(
+                  "Confirm Password",
+                  confirmPasswordController,
+                  obscureText: true,
+                ),
                 SizedBox(height: 15),
 
                 // Submit Button
                 ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()),
-                    );
-                  },
+                  onPressed: handleSignUp,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF6A007C),
                     shape: RoundedRectangleBorder(
@@ -144,10 +217,15 @@ class SignUpPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(String label, {bool obscureText = false}) {
+  Widget _buildTextField(
+    String label,
+    TextEditingController controller, {
+    bool obscureText = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: TextField(
+        controller: controller,
         obscureText: obscureText,
         decoration: InputDecoration(
           labelText: label,
