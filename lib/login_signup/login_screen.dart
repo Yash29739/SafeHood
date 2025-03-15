@@ -1,14 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:safehome/login_signup/forgotPassword.dart';
-import 'package:safehome/mainScreens/LandingScreen.dart';
 import 'signup_screen.dart';
 import '../services/firestore_service.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
-
+  final FirestoreService _firestoreService = FirestoreService();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+
+  void _showError(String message, BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
+    );
+  }
+
+  void _showSuccess(String message, BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.green),
+    );
+  }
+
+  void handleLogin(BuildContext context) async {
+    bool success = await _firestoreService.login(
+      emailController.text,
+      passwordController.text,
+      context,
+    );
+
+    if (success) {
+      Navigator.pushNamed(context, '/landingScreen');
+      _showSuccess("LogIn Successfull !", context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,28 +118,7 @@ class LoginScreen extends StatelessWidget {
                       vertical: 12,
                     ),
                   ),
-                  onPressed: () async {
-                    FirestoreService inst = new FirestoreService();
-                    bool isLoggedIn = await inst.login(
-                      emailController.text,
-                      passwordController.text,
-                      context,
-                    );
-
-                    if (isLoggedIn) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => LandingScreen(),
-                        ),
-                      );
-                    } else {
-                      const errorSnackBar = SnackBar(
-                        content: Text("Error during Login"),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
-                    }
-                  },
+                  onPressed: () => handleLogin(context),
                   child: const Text(
                     'Login',
                     style: TextStyle(

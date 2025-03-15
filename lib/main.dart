@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:safehome/firebase_options.dart';
 import 'package:safehome/login_signup/login_screen.dart';
 import 'package:safehome/login_signup/signup_screen.dart';
+import 'package:safehome/mainScreens/LandingScreen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.purple),
       home: SplashScreen(),
       routes: {
+        '/landingScreen': (context) => const LandingScreen(),
         '/signup': (context) => const SignupScreen(),
       },
     );

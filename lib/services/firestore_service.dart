@@ -4,6 +4,12 @@ import 'package:flutter/material.dart';
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  void _showError(String message, BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
+    );
+  }
+
   Future<bool> signUp(
     String username,
     String email,
@@ -20,8 +26,7 @@ class FirestoreService {
     String description,
     String orgPlaceOfResidence,
     String password,
-    //removed unnecessary storing of confirm password
-    
+    BuildContext context,
   ) async {
     try {
       var userSnapshot =
@@ -30,7 +35,7 @@ class FirestoreService {
               .where('email', isEqualTo: email)
               .get();
       if (userSnapshot.docs.isNotEmpty) {
-        debugPrint("User Already Exists");
+        _showError("User Already Exists", context);
         return false;
       }
 
@@ -60,42 +65,33 @@ class FirestoreService {
     }
   }
 
-  Future<bool> login(String email, String password, context) async {
+  Future<bool> login(
+    String email,
+    String password,
+    BuildContext context,
+  ) async {
     try {
-      _firestore
-      .collection('users')
-      .doc(email)
-      .get()
-      .then((DocumentSnapshot docSnapshot) {
+      _firestore.collection('users').doc(email).get().then((
+        DocumentSnapshot docSnapshot,
+      ) {
         if (docSnapshot.exists) {
-          /// implement login logic
-          // Logic -> [get the password from the firestore ; compare the entered password with the fetched password ; 
-          //           If they match, allow the user into the homeScreen ; else, popup an error]
-
           String fetchedPass = docSnapshot.get('password');
-          print("Fetched Password: $fetchedPass"); /// debug
+
           if (password == fetchedPass) {
-            /// redirect to homeScreen
-            const successSnackBar = SnackBar(content: Text("Successful Login"));
-            ScaffoldMessenger.of(context).showSnackBar(successSnackBar);
             return true;
-          }
-          else {
-            /// incorrect credentials
+          } else {
+            _showError("Incorrect Password", context);
             return false;
           }
-        }
-        else {
-          /// document not found -> redirect to sign-up page
-          Navigator.pushNamed(context, '/signup');
+        } else {
+          _showError("Email not Found!, Create a new Account", context);
           return false;
         }
       });
 
       return true;
-    }
-    catch(e) {
-      print("Error: $e");
+    } catch (e) {
+      debugPrint("Error: $e");
       return false;
     }
   }
