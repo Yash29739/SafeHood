@@ -20,7 +20,8 @@ class FirestoreService {
     String description,
     String orgPlaceOfResidence,
     String password,
-    String confirmPassword,
+    //removed unnecessary storing of confirm password
+    
   ) async {
     try {
       var userSnapshot =
@@ -49,7 +50,6 @@ class FirestoreService {
         ' description': description,
         'orgPlaceOfResidence': orgPlaceOfResidence,
         'password': password,
-        'confirmPassword': confirmPassword,
         'createdAt': DateTime.now(),
       });
 
