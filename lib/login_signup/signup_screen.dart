@@ -42,15 +42,44 @@ class _SignUpPage extends State<SignupScreen> {
       SnackBar(content: Text(message), backgroundColor: Colors.green),
     );
   }
-//---------------------------------------------------------
+
+
   void handleSignUp() async {
+    
+    
+    //make sure age is in numbers
+    if (ageController.text.trim().isEmpty) 
+    {
+      _showError("Enter a valid age");
+      return;
+    }
+
+    int? age = int.tryParse(ageController.text.trim());
+    if (age == null || age <= 0)
+    {
+      _showError("Age is invalid");
+      return;
+    }
+
+    //phone number mandatorily 10 digits
+
+    if (phNumberController.text.trim().isEmpty || phNumberController.text.trim().length != 10 || int.tryParse(phNumberController.text.trim()) == null)
+    {
+      _showError("Enter a valid 10-digit phone number");
+      return;
+    }
+
+
     // making sure it ends with @gmail.com
+
     if (!emailController.text.trim().toLowerCase().endsWith("@gmail.com")) 
     {
       _showError("Enter a valid email");
       return;
     }
     //--------------------------------------------------------
+
+    // make sure passowrd matches
 
     if (passwordController.text != confirmPasswordController.text) {
       _showError("Passwords do not match");
@@ -129,7 +158,8 @@ class _SignUpPage extends State<SignupScreen> {
                 SizedBox(height: 10),
                 _buildTextField("DOB (Date of Birth)", dobController),
                 SizedBox(height: 10),
-                _buildTextField("Age", ageController),
+                //MAKE SURE AGE IS IN NUMBERS
+                _buildTextField("Age", ageController,keyboardType: TextInputType.number),
                 SizedBox(height: 10),
                 _buildTextField("Door Number", doorNumberController),
                 SizedBox(height: 10),
@@ -139,7 +169,8 @@ class _SignUpPage extends State<SignupScreen> {
                 SizedBox(height: 10),
                 _buildTextField("Flat Name", flatNameController),
                 SizedBox(height: 10),
-                _buildTextField("Phone Number", phNumberController),
+                //modified ph number inputting
+                _buildTextField("Phone Number", phNumberController,keyboardType: TextInputType.phone),
                 SizedBox(height: 10),
                 _buildTextField(
                   "Emergency Phone Number",
@@ -229,7 +260,8 @@ class _SignUpPage extends State<SignupScreen> {
   Widget _buildTextField(
     String label,
     TextEditingController controller, {
-    bool obscureText = false,
+    bool obscureText = false, 
+    TextInputType keyboardType = TextInputType.text,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
