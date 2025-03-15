@@ -77,7 +77,7 @@ class _SafeHoodDashboardState extends State<SafeHoodDashboard> {
                         _gridItem(
                           "Do-To-List",
                           Icons.checklist,
-                          TodoListScreen(),
+                          ToDoListScreen(),
                           context,
                         ),
                         _gridItem(

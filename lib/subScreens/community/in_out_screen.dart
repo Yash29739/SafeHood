@@ -4,75 +4,97 @@ class InOutScreen extends StatefulWidget {
   const InOutScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _InOutScreenState createState() => _InOutScreenState();
 }
 
 class _InOutScreenState extends State<InOutScreen> {
-  // Sample data for users' statuses
   final Map<String, bool> userStatus = {
-    "John Doe": true, // true means IN, false means OUT
+    "John Doe": true,
     "Jane Smith": false,
     "Michael Johnson": true,
     "Alice Brown": false,
     "Bob White": true,
   };
 
-  // Toggle IN/OUT status of the user
+  final TextEditingController _searchController = TextEditingController();
+  List<String> _filteredUsers = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredUsers = userStatus.keys.toList();
+  }
+
   void toggleStatus(String user) {
     setState(() {
       userStatus[user] = !userStatus[user]!;
     });
   }
 
+  void _filterUsers(String query) {
+    setState(() {
+      _filteredUsers = userStatus.keys
+          .where((user) => user.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF2E3FF),
+      backgroundColor: const Color(0xFFF2E3FF),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         toolbarHeight: 100,
-        backgroundColor: Color(0xFFCC00FF),
+        backgroundColor: const Color(0xFFCC00FF),
         title: _buildHeader(),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: ListView.builder(
-          itemCount: userStatus.keys.length,
-          itemBuilder: (context, index) {
-            final user = userStatus.keys.elementAt(index);
-            final isIn = userStatus[user]!;
+        child: Column(
+          children: [
+            _buildSearchBar(),
+            const SizedBox(height: 10),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _filteredUsers.length,
+                itemBuilder: (context, index) {
+                  final user = _filteredUsers[index];
+                  final isIn = userStatus[user]!;
 
-            return Card(
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              child: ListTile(
-                leading: CircleAvatar(
-                  // Placeholder or user profile image can go here
-                  backgroundColor: Colors.purple,
-                  child: Text(
-                    user[0], // Display first letter of the user's name
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ),
-                title: Text(user),
-                subtitle: Text(isIn ? 'Status: IN' : 'Status: OUT'),
-                trailing: IconButton(
-                  icon: Icon(
-                    isIn ? Icons.exit_to_app : Icons.check_circle,
-                    color: isIn ? Colors.green : Colors.red,
-                  ),
-                  onPressed: () {
-                    toggleStatus(user);
-                  },
-                ),
+                  return Card(
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.purple,
+                        child: Text(user[0], style: const TextStyle(color: Colors.white)),
+                      ),
+                      title: Text(user),
+                      subtitle: Text(isIn ? 'Status: IN' : 'Status: OUT'),
+                      trailing: ElevatedButton(
+                        onPressed: () => toggleStatus(user),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isIn ? Colors.green : Colors.red,
+                        ),
+                        child: Text(
+                          isIn ? "IN" : "OUT",
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
-            );
-          },
+            ),
+            
+          ],
         ),
       ),
     );
   }
-   Widget _buildHeader() {
+
+  Widget _buildHeader() {
     return Row(
       children: [
         Container(
@@ -85,7 +107,6 @@ class _InOutScreenState extends State<InOutScreen> {
             child: Image.asset("assets/logo.jpg", height: 60),
           ),
         ),
-        // Add your logo here
         const SizedBox(width: 10),
         const Text(
           "SAFE HOOD",
@@ -96,8 +117,23 @@ class _InOutScreenState extends State<InOutScreen> {
             fontFamily: "Merriweather",
           ),
         ),
-        SizedBox(height: 30),
       ],
     );
   }
+
+  Widget _buildSearchBar() {
+    return TextField(
+      controller: _searchController,
+      onChanged: _filterUsers,
+      decoration: InputDecoration(
+        hintText: "Search users...",
+        filled: true,
+        fillColor: Colors.white,
+        prefixIcon: const Icon(Icons.search, color: Colors.purple),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+  }
+
+  
 }

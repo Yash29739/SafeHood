@@ -1,113 +1,196 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class TodoListScreen extends StatefulWidget {
-  const TodoListScreen({super.key});
-
+class ToDoListScreen extends StatefulWidget {
   @override
-  // ignore: library_private_types_in_public_api
-  _TodoListScreenState createState() => _TodoListScreenState();
+  _ToDoListScreenState createState() => _ToDoListScreenState();
 }
 
-class _TodoListScreenState extends State<TodoListScreen> {
-  List<String> tasks = [];
-  final TextEditingController _taskController = TextEditingController();
+class _ToDoListScreenState extends State<ToDoListScreen> {
+  final List<Map<String, dynamic>> _tasks = [];
+  final TextEditingController _taskNameController = TextEditingController();
+  final TextEditingController _taskDescController = TextEditingController();
+  DateTime? _selectedDate;
+  TimeOfDay? _selectedTime;
+  String _selectedPriority = 'Medium';
 
-  // Function to add a task
   void _addTask() {
-    if (_taskController.text.isNotEmpty) {
-      setState(() {
-        tasks.add(_taskController.text);
+    if (_taskNameController.text.isEmpty || _selectedDate == null || _selectedTime == null) {
+      return;
+    }
+    setState(() {
+      _tasks.add({
+        'name': _taskNameController.text,
+        'description': _taskDescController.text,
+        'date': DateFormat('yyyy-MM-dd').format(_selectedDate!),
+        'time': _selectedTime!.format(context),
+        'priority': _selectedPriority,
+        'completed': false,
       });
-      _taskController.clear();
+      _taskNameController.clear();
+      _taskDescController.clear();
+      _selectedDate = null;
+      _selectedTime = null;
+      _selectedPriority = 'Medium';
+    });
+  }
+
+  void _selectDate() async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2101),
+    );
+    if (pickedDate != null) {
+      setState(() {
+        _selectedDate = pickedDate;
+      });
     }
   }
 
-  // Function to build task list
-  Widget _buildTaskList() {
-    return tasks.isEmpty
-        ? const Center(
-            child: Text(
-              "No tasks yet! Click the add task button to add.",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-          )
-        : ListView.builder(
-            itemCount: tasks.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(tasks[index]),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red),
-                  onPressed: () {
-                    setState(() {
-                      tasks.removeAt(index);
-                    });
-                  },
-                ),
-              );
-            },
-          );
+  void _selectTime() async {
+    TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (pickedTime != null) {
+      setState(() {
+        _selectedTime = pickedTime;
+      });
+    }
+  }
+
+  void _toggleCompletion(int index) {
+    setState(() {
+      _tasks[index]['completed'] = !_tasks[index]['completed'];
+    });
+  }
+
+  void _deleteTask(int index) {
+    setState(() {
+      _tasks.removeAt(index);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.purple[50],
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        toolbarHeight: 100,
-        backgroundColor: Color(0xFFCC00FF),
-        title: _buildHeader(),
+        title: Text("To-Do List", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.purple,
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(
-              controller: _taskController,
-              decoration: const InputDecoration(
-                labelText: 'Enter Task',
-                border: OutlineInputBorder(),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5)],
+              ),
+              padding: EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  _buildTextField("Task Name", _taskNameController),
+                  _buildTextField("What to do", _taskDescController),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _buildDateTimeButton("Select Date", _selectedDate?.toString() ?? "Pick Date", _selectDate),
+                      _buildDateTimeButton("Select Time", _selectedTime?.format(context) ?? "Pick Time", _selectTime),
+                    ],
+                  ),
+                  DropdownButtonFormField<String>(
+                    value: _selectedPriority,
+                    decoration: InputDecoration(
+                      labelText: "Priority",
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                    items: ["Low", "Medium", "High"].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        _selectedPriority = newValue!;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: _addTask,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.purple,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                    child: Text("Add Task", style: TextStyle(color: Colors.white)),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: _addTask,
-              child: const Text('Add Task'),
-            ),
             const SizedBox(height: 20),
-            Expanded(child: _buildTaskList()),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _tasks.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    child: ListTile(
+                      title: Text(_tasks[index]['name'], style: TextStyle(fontWeight: FontWeight.bold)),
+                      subtitle: Text(
+                        "${_tasks[index]['description']}\nDue: ${_tasks[index]['date']} at ${_tasks[index]['time']}\nPriority: ${_tasks[index]['priority']}",
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              _tasks[index]['completed'] ? Icons.check_box : Icons.check_box_outline_blank,
+                              color: _tasks[index]['completed'] ? Colors.green : null,
+                            ),
+                            onPressed: () => _toggleCompletion(index),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete, color: Colors.red),
+                            onPressed: () => _deleteTask(index),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
-      
     );
   }
-  Widget _buildHeader() {
-    return Row(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.white, width: 3),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(50),
-            child: Image.asset("assets/logo.jpg", height: 60),
-          ),
+
+  Widget _buildTextField(String label, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
-        // Add your logo here
-        const SizedBox(width: 10),
-        const Text(
-          "SAFE HOOD",
-          style: TextStyle(
-            fontSize: 40,
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontFamily: "Merriweather",
-          ),
-        ),
-        SizedBox(height: 30),
-      ],
+      ),
+    );
+  }
+
+  Widget _buildDateTimeButton(String label, String text, VoidCallback onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      child: Text(text),
     );
   }
 }
