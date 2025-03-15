@@ -42,10 +42,19 @@ class _SignUpPage extends State<SignupScreen> {
       SnackBar(content: Text(message), backgroundColor: Colors.green),
     );
   }
-
+//---------------------------------------------------------
   void handleSignUp() async {
+    // making sure it ends with @gmail.com
+    if (!emailController.text.trim().toLowerCase().endsWith("@gmail.com")) 
+    {
+      _showError("Enter a valid email");
+      return;
+    }
+    //--------------------------------------------------------
+
     if (passwordController.text != confirmPasswordController.text) {
       _showError("Passwords do not match");
+      return;
     }
 
     bool success = await _firestoreService.signUp(
@@ -64,7 +73,7 @@ class _SignUpPage extends State<SignupScreen> {
       descriptionController.text,
       residenceController.text,
       passwordController.text,
-      confirmPasswordController.text,
+      
     );
 
     if (success) {
