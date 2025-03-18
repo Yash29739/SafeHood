@@ -1,6 +1,7 @@
+import 'package:bcrypt/bcrypt.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:safehome/login_signup/login_screen.dart';
-import 'package:safehome/services/firestore_service.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -10,7 +11,6 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignUpPage extends State<SignupScreen> {
-  final FirestoreService _firestoreService = FirestoreService();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController occupationController = TextEditingController();
@@ -44,69 +44,50 @@ class _SignUpPage extends State<SignupScreen> {
   }
 
   void handleSignUp() async {
-    //make sure age is in numbers
-    if (ageController.text.trim().isEmpty) {
-      _showError("Enter a valid age");
-      return;
-    }
+    String email = emailController.text.trim();
+    String name = nameController.text.trim();
+    String occupation = occupationController.text.trim();
+    String dob = dobController.text.trim();
+    String age = ageController.text.trim();
+    String doorNumber = doorNumberController.text.trim();
+    String peopleCount = peopleCountController.text.trim();
+    String flatCode = flatCodeController.text.trim();
+    String flatName = flatNameController.text.trim();
+    String phone = phNumberController.text.trim();
+    String emergencyPhone = emergencyNumberController.text.trim();
+    String emergencyContact = emergencyContactNameController.text.trim();
+    String desc = descriptionController.text.trim();
+    String origin = residenceController.text.trim();
+    String password = passwordController.text.trim();
 
-    int? age = int.tryParse(ageController.text.trim());
-    if (age == null || age <= 0) {
-      _showError("Age is invalid");
-      return;
-    }
+    try {
+      String hashedPass = BCrypt.hashpw(password, BCrypt.gensalt());
 
-    //phone number mandatorily 10 digits
-
-    if (phNumberController.text.trim().isEmpty ||
-        phNumberController.text.trim().length != 10 ||
-        int.tryParse(phNumberController.text.trim()) == null) {
-      _showError("Enter a valid 10-digit phone number");
-      return;
-    }
-
-    // making sure it ends with @gmail.com
-
-    if (!emailController.text.trim().toLowerCase().endsWith("@gmail.com")) {
-      _showError("Enter a valid email");
-      return;
-    }
-    //--------------------------------------------------------
-
-    // make sure passowrd matches
-
-    if (passwordController.text != confirmPasswordController.text) {
-      _showError("Passwords do not match");
-      return;
-    }
-
-    bool success = await _firestoreService.signUp(
-      nameController.text,
-      emailController.text,
-      occupationController.text,
-      dobController.text,
-      ageController.text,
-      doorNumberController.text,
-      peopleCountController.text,
-      flatCodeController.text,
-      flatNameController.text,
-      phNumberController.text,
-      emergencyNumberController.text,
-      emergencyContactNameController.text,
-      descriptionController.text,
-      residenceController.text,
-      passwordController.text,
-      context,
-    );
-
-    if (success) {
-      _showSuccess("SignUp Successfull");
+      await FirebaseFirestore.instance.collection("users").doc(email).set({
+        "name": name,
+        "email": email,
+        "occupation": occupation,
+        "dob": dob,
+        "age": age,
+        "doorNumber": doorNumber,
+        "peopleCount": peopleCount,
+        "flatCode": flatCode,
+        "flatName": flatName,
+        "phone": phone,
+        "emergencyPhone": emergencyPhone,
+        "emergencyContact": emergencyContact,
+        "description": desc,
+        "origin": origin,
+        "password": hashedPass,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+      _showSuccess("Account created successfully");
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => LoginScreen()),
       );
-    } else {
-      _showError("Signup failed");
+    } catch (e) {
+      _showError("$e");
     }
   }
 

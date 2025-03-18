@@ -1,11 +1,13 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 import 'package:safehome/login_signup/forgotPassword.dart';
+import 'package:safehome/mainScreens/LandingScreen.dart';
 import 'signup_screen.dart';
 import '../services/firestore_service.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
-  final FirestoreService _firestoreService = FirestoreService();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
 
@@ -21,16 +23,30 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  void handleLogin(BuildContext context) async {
-    bool success = await _firestoreService.login(
-      emailController.text,
-      passwordController.text,
-      context,
-    );
+  void logInUser(BuildContext context) async {
+    String? email = emailController.text;
+    String? password = passwordController.text;
 
-    if (success) {
-      Navigator.pushNamed(context, '/landingScreen');
-      _showSuccess("LogIn Successfull !", context);
+    AuthController loginAuth = AuthController();
+
+    try {
+      String? result = await loginAuth.loginUser(
+        email: email,
+        password: password,
+      );
+
+      if (result == null) {
+        _showSuccess("Logged in Successfully!", context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => LandingScreen()),
+        );
+      } else {
+        _showError(result, context);
+      }
+    } catch (e) {
+      developer.log("Error during registration: $e");
+      _showError(e.toString(), context);
     }
   }
 
@@ -118,7 +134,7 @@ class LoginScreen extends StatelessWidget {
                       vertical: 12,
                     ),
                   ),
-                  onPressed: () => handleLogin(context),
+                  onPressed: () => logInUser(context),
                   child: const Text(
                     'Login',
                     style: TextStyle(

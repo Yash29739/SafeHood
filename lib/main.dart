@@ -6,6 +6,7 @@ import 'package:safehome/firebase_options.dart';
 import 'package:safehome/login_signup/login_screen.dart';
 import 'package:safehome/login_signup/signup_screen.dart';
 import 'package:safehome/mainScreens/LandingScreen.dart';
+import 'package:safehome/services/localServices.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,6 +38,21 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  Widget? nextScreen;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  Future<void> _checkLoginStatus() async {
+    bool isLoggedIn = await isUserLoggedIn();
+    setState(() {
+      nextScreen = isLoggedIn ?  LandingScreen() : LoginScreen();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedSplashScreen(
@@ -61,7 +77,9 @@ class _SplashScreenState extends State<SplashScreen> {
           ],
         ),
       ),
-      nextScreen: LoginScreen(),
+      nextScreen:
+          nextScreen ??
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
       splashIconSize: 520,
       centered: true,
       duration: 2000,

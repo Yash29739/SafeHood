@@ -1,4 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:safehome/login_signup/login_screen.dart';
+import 'package:safehome/services/firestore_service.dart';
+import 'package:safehome/services/localServices.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -22,9 +27,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
     "Flat Code": TextEditingController(text: "SH101"),
     "Flat Name": TextEditingController(text: "Safe Haven"),
     "Phone Number": TextEditingController(text: "9876543210"),
-    "About Yourself": TextEditingController(text: "Friendly and helpful neighbor."),
+    "About Yourself": TextEditingController(
+      text: "Friendly and helpful neighbor.",
+    ),
     "Original Place of Residence": TextEditingController(text: "Bangalore"),
   };
+
+  void _logout(BuildContext context) async {
+    // Add logout logic here
+    AuthController logoutController = AuthController();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String? userId = prefs.getString('userId');
+    logoutController.updateUserLoginStatus(userId, false);
+    logoutUser();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Logout successful!"),
+        backgroundColor: Colors.green,
+      ),
+    );
+
+    await FirebaseFirestore.instance.collection('userLogs').doc(userId).set({
+      'email': userId,
+      'action': "Logout",
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginScreen()),
+    );
+  }
 
   void _toggleInOut() {
     setState(() {
@@ -48,7 +83,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EditEmergencyContactsScreen(emergencyContacts: emergencyContacts),
+        builder:
+            (context) => EditEmergencyContactsScreen(
+              emergencyContacts: emergencyContacts,
+            ),
       ),
     ).then((updatedContacts) {
       if (updatedContacts != null) {
@@ -86,19 +124,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(height: 10),
                   Text(
                     controllers["Name"]!.text,
-                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.purple),
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.purple,
+                    ),
                   ),
                   Text(
                     "Door No: ${controllers["Door Number"]!.text}",
                     style: const TextStyle(fontSize: 16, color: Colors.black54),
                   ),
                   const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _editProfile,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.purple,
-                    ),
-                    child: const Text("Edit Profile", style: TextStyle(color: Colors.white)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                        onPressed: _editProfile,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.purple,
+                        ),
+                        child: const Text(
+                          "Edit Profile",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => {_logout(context)},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                        ),
+                        child: Text(
+                          "Logout",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -126,7 +186,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: isIn ? Colors.green : Colors.red,
                     ),
-                    child: Text(isIn ? "Mark as Out" : "Mark as In", style: const TextStyle(color: Colors.white)),
+                    child: Text(
+                      isIn ? "Mark as Out" : "Mark as In",
+                      style: const TextStyle(color: Colors.white),
+                    ),
                   ),
                   const SizedBox(height: 20),
 
@@ -138,8 +201,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(height: 5),
                   ElevatedButton(
                     onPressed: _manageEmergencyContacts,
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                    child: const Text("Manage Emergency Contacts", style: TextStyle(color: Colors.white)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                    ),
+                    child: const Text(
+                      "Manage Emergency Contacts",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),
@@ -165,7 +233,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Edit Profile"), backgroundColor: Colors.purple),
+      appBar: AppBar(
+        title: const Text("Edit Profile"),
+        backgroundColor: Colors.purple,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
@@ -177,10 +248,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple,
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.purple),
+              child: const Text(
+                "Save Changes",
+                style: TextStyle(color: Colors.white),
               ),
-              child: const Text("Save Changes", style: TextStyle(color: Colors.white)),
             ),
           ],
         ),
@@ -208,18 +280,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 class EditEmergencyContactsScreen extends StatefulWidget {
   final List<Map<String, String>> emergencyContacts;
 
-  const EditEmergencyContactsScreen({super.key, required this.emergencyContacts});
+  const EditEmergencyContactsScreen({
+    super.key,
+    required this.emergencyContacts,
+  });
 
   @override
-  _EditEmergencyContactsScreenState createState() => _EditEmergencyContactsScreenState();
+  _EditEmergencyContactsScreenState createState() =>
+      _EditEmergencyContactsScreenState();
 }
-
 
 // ignore: unused_element
 
-
-
-class _EditEmergencyContactsScreenState extends State<EditEmergencyContactsScreen> {
+class _EditEmergencyContactsScreenState
+    extends State<EditEmergencyContactsScreen> {
   late List<Map<String, String>> contacts;
 
   @override
@@ -274,7 +348,9 @@ class _EditEmergencyContactsScreenState extends State<EditEmergencyContactsScree
                   return Card(
                     elevation: 4,
                     margin: const EdgeInsets.symmetric(vertical: 8),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Column(
@@ -282,20 +358,29 @@ class _EditEmergencyContactsScreenState extends State<EditEmergencyContactsScree
                           TextField(
                             decoration: const InputDecoration(
                               labelText: "Name",
-                              prefixIcon: Icon(Icons.person, color: Colors.purple),
+                              prefixIcon: Icon(
+                                Icons.person,
+                                color: Colors.purple,
+                              ),
                               border: OutlineInputBorder(),
                             ),
-                            onChanged: (value) => _updateContact(index, "Name", value),
+                            onChanged:
+                                (value) => _updateContact(index, "Name", value),
                           ),
                           const SizedBox(height: 10),
                           TextField(
                             decoration: const InputDecoration(
                               labelText: "Phone Number",
-                              prefixIcon: Icon(Icons.phone, color: Colors.purple),
+                              prefixIcon: Icon(
+                                Icons.phone,
+                                color: Colors.purple,
+                              ),
                               border: OutlineInputBorder(),
                             ),
                             keyboardType: TextInputType.phone,
-                            onChanged: (value) => _updateContact(index, "Phone", value),
+                            onChanged:
+                                (value) =>
+                                    _updateContact(index, "Phone", value),
                           ),
                           const SizedBox(height: 10),
                           Align(

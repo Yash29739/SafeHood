@@ -1,98 +1,64 @@
+// ignore: file_names
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+import 'package:bcrypt/bcrypt.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class FirestoreService {
+class AuthController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  void _showError(String message, BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.red),
-    );
-  }
-
-  Future<bool> signUp(
-    String username,
-    String email,
-    String occupation,
-    String dob,
-    String age,
-    String doorno,
-    String peopleCount,
-    String flatCode,
-    String flatname,
-    String phone,
-    String emergencyPhone,
-    String emergencyContactName,
-    String description,
-    String orgPlaceOfResidence,
-    String password,
-    BuildContext context,
-  ) async {
+  Future<String?> loginUser({
+    required String? email,
+    required String? password,
+  }) async {
     try {
-      var userSnapshot =
-          await _firestore
-              .collection('users')
-              .where('email', isEqualTo: email)
-              .get();
-      if (userSnapshot.docs.isNotEmpty) {
-        _showError("User Already Exists", context);
-        return false;
+      CollectionReference users = FirebaseFirestore.instance.collection(
+        "users",
+      );
+
+      QuerySnapshot? snapshot =
+          await users.where("email", isEqualTo: email).limit(1).get();
+
+      if (snapshot.docs.isEmpty) {
+        return 'User not found or email does not match USN';
       }
 
-      await _firestore.collection('users').doc(email).set({
-        'username': username,
+      // Extract user data
+      Map<String, dynamic> userData =
+          snapshot.docs.first.data() as Map<String, dynamic>;
+      String? hashedPassword = userData["password"];
+
+      // Verify the password usng bcrypt
+      bool passwordMatched = BCrypt.checkpw(password!, hashedPassword!);
+      if (!passwordMatched) {
+        return 'Invalid Credentials';
+      }
+
+      // Save login session
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString("userId", email!);
+      await prefs.setBool("isLoggedIn", true);
+
+      // Updating status of login
+      await updateUserLoginStatus(prefs.getString('userId'), true);
+
+      // Creating user logs
+      await FirebaseFirestore.instance.collection('userLogs').doc(email).set({
         'email': email,
-        'occupation': occupation,
-        'dob': dob,
-        'age': age,
-        'doorno': doorno,
-        'peopleCount': peopleCount,
-        'flatCode': flatCode,
-        'flatname': flatname,
-        'phone': phone,
-        'emergencyPhone': emergencyPhone,
-        'emergencyContactName': emergencyContactName,
-        ' description': description,
-        'orgPlaceOfResidence': orgPlaceOfResidence,
-        'password': password,
-        'createdAt': DateTime.now(),
+        'action': "Login",
+        'timestamp': FieldValue.serverTimestamp(),
       });
 
-      return true;
+      return null;
     } catch (e) {
-      debugPrint("Signup error: $e");
-      return false;
+      return e.toString(); // unsuccessful
     }
   }
 
-  Future<bool> login(
-    String email,
-    String password,
-    BuildContext context,
-  ) async {
-    try {
-      _firestore.collection('users').doc(email).get().then((
-        DocumentSnapshot docSnapshot,
-      ) {
-        if (docSnapshot.exists) {
-          String fetchedPass = docSnapshot.get('password');
-
-          if (password == fetchedPass) {
-            return true;
-          } else {
-            _showError("Incorrect Password", context);
-            return false;
-          }
-        } else {
-          _showError("Email not Found!, Create a new Account", context);
-          return false;
-        }
-      });
-
-      return true;
-    } catch (e) {
-      debugPrint("Error: $e");
-      return false;
-    }
+  // Login or Logout status update in database
+  Future<void> updateUserLoginStatus(String? userId, bool isLoggedIn) async {
+    // Update user login status in Firestore
+    await _firestore.collection("users").doc(userId).update({
+      "isLoggedIn": isLoggedIn,
+    });
   }
 }
