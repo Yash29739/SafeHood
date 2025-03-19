@@ -1,238 +1,231 @@
-import 'package:bcrypt/bcrypt.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:safehome/login_signup/login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignUpPage();
+  State<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _SignUpPage extends State<SignupScreen> {
+class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController occupationController = TextEditingController();
   final TextEditingController dobController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
-  final TextEditingController doorNumberController = TextEditingController();
-  final TextEditingController peopleCountController = TextEditingController();
-  final TextEditingController flatCodeController = TextEditingController();
-  final TextEditingController flatNameController = TextEditingController();
   final TextEditingController phNumberController = TextEditingController();
-  final TextEditingController emergencyNumberController =
-      TextEditingController();
-  final TextEditingController emergencyContactNameController =
-      TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController residenceController = TextEditingController();
+  final TextEditingController emergencyPhNumberController = TextEditingController();
+  final TextEditingController emergencyNameController = TextEditingController();
+  final TextEditingController doorNumberController = TextEditingController();
+  final TextEditingController flatCodeController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
 
-  void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.red),
+  // Optional fields
+  final TextEditingController occupationController = TextEditingController();
+  final TextEditingController numberOfPeopleController = TextEditingController();
+  final TextEditingController flatNameController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController originalPlaceController = TextEditingController();
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  // This will open the date picker and set the DOB
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime initialDate = DateTime.now();
+    DateTime firstDate = DateTime(1900);
+    DateTime lastDate = DateTime.now();
+
+    // Show the date picker
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: firstDate,
+      lastDate: lastDate,
     );
-  }
 
-  void _showSuccess(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.green),
-    );
-  }
-
-  void handleSignUp() async {
-    String email = emailController.text.trim();
-    String name = nameController.text.trim();
-    String occupation = occupationController.text.trim();
-    String dob = dobController.text.trim();
-    String age = ageController.text.trim();
-    String doorNumber = doorNumberController.text.trim();
-    String peopleCount = peopleCountController.text.trim();
-    String flatCode = flatCodeController.text.trim();
-    String flatName = flatNameController.text.trim();
-    String phone = phNumberController.text.trim();
-    String emergencyPhone = emergencyNumberController.text.trim();
-    String emergencyContact = emergencyContactNameController.text.trim();
-    String desc = descriptionController.text.trim();
-    String origin = residenceController.text.trim();
-    String password = passwordController.text.trim();
-
-    try {
-      String hashedPass = BCrypt.hashpw(password, BCrypt.gensalt());
-
-      await FirebaseFirestore.instance.collection("users").doc(email).set({
-        "name": name,
-        "email": email,
-        "occupation": occupation,
-        "dob": dob,
-        "age": age,
-        "doorNumber": doorNumber,
-        "peopleCount": peopleCount,
-        "flatCode": flatCode,
-        "flatName": flatName,
-        "phone": phone,
-        "emergencyPhone": emergencyPhone,
-        "emergencyContact": emergencyContact,
-        "description": desc,
-        "origin": origin,
-        "password": hashedPass,
-        'timestamp': FieldValue.serverTimestamp(),
+    // If a date is picked, update the TextField with the selected date and calculate the age
+    if (picked != null && picked != initialDate) {
+      setState(() {
+        dobController.text = "${picked.toLocal()}".split(' ')[0]; // Format to yyyy-mm-dd
+        _calculateAge(picked); // Calculate the age whenever the DOB is updated
       });
-      _showSuccess("Account created successfully");
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
-      );
-    } catch (e) {
-      _showError("$e");
     }
+  }
+
+  // Calculate age based on the selected DOB
+  void _calculateAge(DateTime dob) {
+    DateTime today = DateTime.now();
+    int age = today.year - dob.year;
+    if (today.month < dob.month || (today.month == dob.month && today.day < dob.day)) {
+      age--; // If birthday hasn't occurred yet this year, subtract one year from the age
+    }
+    ageController.text = age.toString(); // Set the calculated age
+  }
+
+  void handleSignUp() {
+    if (!_formKey.currentState!.validate()) {
+      return; // If form is invalid, return
+    }
+
+    // Handle signup logic here (e.g., send data to the backend or save to database)
+    print("Name: ${nameController.text}");
+    print("Email: ${emailController.text}");
+    print("DOB: ${dobController.text}");
+    print("Age: ${ageController.text}");
+    print("Phone Number: ${phNumberController.text}");
+    print("Emergency Name: ${emergencyNameController.text}");
+    print("Emergency Phone Number: ${emergencyPhNumberController.text}");
+    print("Door Number: ${doorNumberController.text}");
+    print("Flat Code: ${flatCodeController.text}");
+    print("Password: ${passwordController.text}");
+    print("Confirm Password: ${confirmPasswordController.text}");
+    print("Occupation: ${occupationController.text}");
+    print("Number of People Living: ${numberOfPeopleController.text}");
+    print("Flat Name: ${flatNameController.text}");
+    print("Description: ${descriptionController.text}");
+    print("Original Place: ${originalPlaceController.text}");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF2E3FF), // Background color
+      backgroundColor: Colors.purple.shade100, // Lighter purple background
       body: Center(
         child: SingleChildScrollView(
           child: Container(
             padding: const EdgeInsets.all(20),
-            // Fixed width for form
-            child: Column(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.asset(
-                    'assets/logo.jpg', // Change this to your actual logo path
-                    width: 120,
-                  ),
-                ),
-
-                // Logo
-                const SizedBox(height: 10),
-                // Sign Up Text
-                const Text(
-                  "User Registration",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: "Merriweather",
-                    color: Color(0xFF6A007C),
-                  ),
-                ),
-                const SizedBox(height: 10),
-
-                // Input Fields
-                _buildTextField("Name", nameController),
-                SizedBox(height: 10),
-                _buildTextField("Email ID", emailController),
-                SizedBox(height: 10),
-                _buildTextField("Occupation", occupationController),
-                SizedBox(height: 10),
-                _buildTextField("DOB (Date of Birth)", dobController),
-                SizedBox(height: 10),
-                //MAKE SURE AGE IS IN NUMBERS
-                _buildTextField(
-                  "Age",
-                  ageController,
-                  keyboardType: TextInputType.number,
-                ),
-                SizedBox(height: 10),
-                _buildTextField("Door Number", doorNumberController),
-                SizedBox(height: 10),
-                _buildTextField("Total People Living", peopleCountController),
-                SizedBox(height: 10),
-                _buildTextField("Flat Code", flatCodeController),
-                SizedBox(height: 10),
-                _buildTextField("Flat Name", flatNameController),
-                SizedBox(height: 10),
-                //modified ph number inputting
-                _buildTextField(
-                  "Phone Number",
-                  phNumberController,
-                  keyboardType: TextInputType.phone,
-                ),
-                SizedBox(height: 10),
-                _buildTextField(
-                  "Emergency Phone Number",
-                  emergencyNumberController,
-                ),
-                SizedBox(height: 10),
-                _buildTextField(
-                  "Emergency Contact Name",
-                  emergencyContactNameController,
-                ),
-                SizedBox(height: 10),
-                _buildTextField(
-                  "Description About Yourself",
-                  descriptionController,
-                ),
-                SizedBox(height: 10),
-                _buildTextField(
-                  "Original Place of Residence",
-                  residenceController,
-                ),
-                SizedBox(height: 10),
-                _buildTextField(
-                  "Password",
-                  passwordController,
-                  obscureText: true,
-                ),
-                SizedBox(height: 10),
-                _buildTextField(
-                  "Confirm Password",
-                  confirmPasswordController,
-                  obscureText: true,
-                ),
-                SizedBox(height: 15),
-
-                // Submit Button
-                ElevatedButton(
-                  onPressed: handleSignUp,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF6A007C),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 40,
-                      vertical: 12,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Colors.purple.shade300, Colors.purple.shade100], // Lighter gradient
+              ),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.asset(
+                      'assets/logo.jpg', // Change this to your actual logo path
+                      width: 120,
                     ),
                   ),
-                  child: const Text(
-                    "Register",
+                  const SizedBox(height: 20),
+                  const Text(
+                    "User Registration",
                     style: TextStyle(
-                      color: Colors.white,
+                      fontSize: 36,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontFamily: "Roboto",
+                      color: Color.fromARGB(255, 119, 15, 123), // Matching color for the title text
+                      letterSpacing: 1.5,
                     ),
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Already a User?'),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LoginScreen(),
-                          ),
-                        );
-                      },
-                      child: const Text(
-                        'Log-In',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 0, 140, 255),
-                        ),
+                  const SizedBox(height: 20),
+
+                  // Input Fields
+                  _buildTextField("Name*", nameController, (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Name is required";
+                    }
+                    return null;
+                  }),
+                  SizedBox(height: 10),
+                  _buildTextField("Email ID *", emailController, (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Email is required";
+                    }
+                    if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+                        .hasMatch(value)) {
+                      return "Enter a valid email";
+                    }
+                    return null;
+                  }, hintText: "abc@gmail.com"),
+                  SizedBox(height: 10),
+                  _buildDateOfBirthField(),
+                  SizedBox(height: 10),
+                  _buildTextField("Age*", ageController, null, readOnly: true),
+                  SizedBox(height: 10),
+                  _buildTextField("Phone Number* (10 digits)", phNumberController, (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Phone Number is required";
+                    }
+                    if (value.length != 10 || !RegExp(r'^[0-9]+$').hasMatch(value)) {
+                      return "Phone number must be exactly 10 digits";
+                    }
+                    return null;
+                  }),
+                  SizedBox(height: 10),
+                  _buildTextField("Emergency Name", emergencyNameController, null),
+                  SizedBox(height: 10),
+                  _buildTextField("Emergency Phone Number", emergencyPhNumberController, (value) {
+                    if (value == phNumberController.text) {
+                      return "Emergency phone number cannot be the same as phone number";
+                    }
+                    return null;
+                  }),
+                  SizedBox(height: 10),
+                  _buildTextField("Door Number", doorNumberController, null),
+                  SizedBox(height: 10),
+                  _buildTextField("Flat Code", flatCodeController, null),
+                  SizedBox(height: 10),
+                  _buildTextField("Password*", passwordController, (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Password is required";
+                    }
+                    return null;
+                  }, obscureText: true),
+                  SizedBox(height: 10),
+                  _buildTextField("Confirm Password*", confirmPasswordController, (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Confirm Password is required";
+                    }
+                    if (value != passwordController.text) {
+                      return "Passwords do not match";
+                    }
+                    return null;
+                  }, obscureText: true),
+                  SizedBox(height: 10),
+
+                  // Optional Fields
+                  _buildTextField("Occupation (Optional)", occupationController, null),
+                  SizedBox(height: 10),
+                  _buildTextField("Number of People Living (Optional)", numberOfPeopleController, null),
+                  SizedBox(height: 10),
+                  _buildTextField("Flat Name (Optional)", flatNameController, null),
+                  SizedBox(height: 10),
+                  _buildTextField("Description About Yourself (Optional)", descriptionController, null),
+                  SizedBox(height: 10),
+                  _buildTextField("Original Place of Residence (Optional)", originalPlaceController, null),
+                  SizedBox(height: 20),
+
+                  // Submit Button
+                  ElevatedButton(
+                    onPressed: handleSignUp,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color.fromARGB(255, 119, 15, 123), // Pink color for button
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 40,
+                        vertical: 12,
                       ),
                     ),
-                  ],
-                ),
-              ],
+                    child: const Text(
+                      "Register",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -240,34 +233,84 @@ class _SignUpPage extends State<SignupScreen> {
     );
   }
 
+  Widget _buildDateOfBirthField() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextFormField(
+              controller: dobController,
+              decoration: InputDecoration(
+                labelText: "DOB (Date of Birth)*",
+                fillColor: Colors.white,
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: const BorderSide(color: Colors.purple, width: 2), // Increased border width
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: const BorderSide(color: Color.fromARGB(255, 119, 15, 123), width: 2), // Increased border width for focus
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                  vertical: 10,
+                ),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Date of Birth is required";
+                }
+                return null;
+              },
+              readOnly: true, // Make the field read-only, as the user will pick the date
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.calendar_today, color: Color.fromARGB(255, 119, 15, 123)),
+            onPressed: () {
+              _selectDate(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildTextField(
     String label,
-    TextEditingController controller, {
+    TextEditingController controller,
+    String? Function(String?)? validator, {
     bool obscureText = false,
-    TextInputType keyboardType = TextInputType.text,
+    String? hintText,
+    bool readOnly = false,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
-      child: TextField(
+      child: TextFormField(
         controller: controller,
         obscureText: obscureText,
+        readOnly: readOnly,
         decoration: InputDecoration(
           labelText: label,
+          hintText: hintText,
           fillColor: Colors.white,
           filled: true,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: Color(0xFF6A007C)),
+            borderRadius: BorderRadius.circular(15),
+            borderSide: const BorderSide(color: Colors.purple, width: 2), // Increased border width
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: Colors.purple, width: 2),
+            borderRadius: BorderRadius.circular(15),
+            borderSide: const BorderSide(color: Color.fromARGB(255, 119, 15, 123), width: 2), // Increased border width for focus
           ),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 15,
             vertical: 10,
           ),
         ),
+        validator: validator,
       ),
     );
   }
