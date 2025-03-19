@@ -26,6 +26,8 @@ class AuthController {
       Map<String, dynamic> userData =
           snapshot.docs.first.data() as Map<String, dynamic>;
       String? hashedPassword = userData["password"];
+      String? flatCode = userData["flatCode"];
+      String? userName = userData["name"];
 
       // Verify the password usng bcrypt
       bool passwordMatched = BCrypt.checkpw(password!, hashedPassword!);
@@ -36,6 +38,8 @@ class AuthController {
       // Save login session
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString("userId", email!);
+      await prefs.setString("userName", userName!);
+      await prefs.setString("flatCode", flatCode!);
       await prefs.setBool("isLoggedIn", true);
 
       // Updating status of login

@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApartmentChatScreen extends StatefulWidget {
   const ApartmentChatScreen({super.key});
@@ -10,19 +12,42 @@ class ApartmentChatScreen extends StatefulWidget {
 class _ApartmentChatScreenState extends State<ApartmentChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   List<Map<String, String>> messages = [];
+  late CollectionReference chatRef;
+  String? flatCode;
+  String? userName;
 
-  // Function to send a new message
-  void _sendMessage() {
-    if (_messageController.text.isNotEmpty) {
-      setState(() {
-        messages.add({
-          "user": "You", // Can be replaced with actual user name
-          "message": _messageController.text,
-          "time": "${TimeOfDay.now().hour}:${TimeOfDay.now().minute}",
-        });
+  void initState() {
+    super.initState();
+    _loadFlatCode();
+  }
+
+  Future<void> _loadFlatCode() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      flatCode = prefs.getString("flatCode");
+      userName = prefs.getString("userName");
+    });
+    chatRef = FirebaseFirestore.instance
+        .collection("chats")
+        .doc(flatCode)
+        .collection("messages");
+  }
+
+  void _sendMessage() async {
+    if (_messageController.text.isNotEmpty && flatCode != null) {
+      await chatRef.add({
+        "user": userName,
+        "message": _messageController.text,
+        "time": FieldValue.serverTimestamp(),
       });
       _messageController.clear();
     }
+  }
+
+  String _formatTimestamp(Timestamp? timestamp) {
+    if (timestamp == null) return "Now";
+    DateTime date = timestamp.toDate();
+    return "${date.hour}:${date.minute.toString().padLeft(2, '0')}";
   }
 
   @override
@@ -45,69 +70,104 @@ class _ApartmentChatScreenState extends State<ApartmentChatScreen> {
       body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(10),
-              itemCount: messages.length,
-              itemBuilder: (context, index) {
-                return Align(
-                  alignment:
-                      messages[index]["user"] == "You"
-                          ? Alignment.centerRight
-                          : Alignment.centerLeft,
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 5),
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color:
-                          messages[index]["user"] == "You"
-                              ? Colors.purple[100]
-                              : Colors.grey[300],
-                      borderRadius: BorderRadius.circular(10),
+            child: StreamBuilder<QuerySnapshot>(
+              stream:
+                  flatCode == null
+                      ? null // Return null if flatCode is not loaded yet
+                      : FirebaseFirestore.instance
+                          .collection("chats")
+                          .doc(flatCode)
+                          .collection("messages")
+                          .orderBy("time", descending: false)
+                          .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      "No messages yet. Start the conversation!",
+                      style: TextStyle(color: Colors.grey),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          messages[index]["user"]!,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color:
-                                messages[index]["user"] == "You"
-                                    ? Colors.purple
-                                    : Colors.black,
-                          ),
-                        ),
-                        const SizedBox(height: 5),
-                        Text(messages[index]["message"]!),
-                        const SizedBox(height: 5),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: Text(
-                            messages[index]["time"]!,
+                  );
+                }
+
+                var docs = snapshot.data!.docs;
+
+                return ListView.builder(
+                  padding: const EdgeInsets.all(10),
+                  itemCount: docs.length,
+                  itemBuilder: (context, index) {
+                    var message = docs[index].data() as Map<String, dynamic>;
+                    bool isUser = message["user"] == userName;
+
+                    return Align(
+                      alignment:
+                          isUser ? Alignment.centerRight : Alignment.centerLeft,
+                      child: Column(
+                        crossAxisAlignment:
+                            isUser
+                                ? CrossAxisAlignment.start
+                                : CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            message["user"] ?? "Unknown",
                             style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
+                              backgroundColor: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              color: Color.fromARGB(181, 90, 90, 90),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
+
+                          Container(
+                            margin: const EdgeInsets.symmetric(vertical: 5),
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color:
+                                  isUser
+                                      ? Colors.purple[100]
+                                      : Colors.grey[300],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 5),
+                                Text(
+                                  message["message"] ?? "",
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                                const SizedBox(height: 5),
+                                Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: Text(
+                                    _formatTimestamp(message["time"]),
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 );
               },
             ),
           ),
+
           Padding(
-            padding: const EdgeInsets.all(10),
+            padding: EdgeInsets.all(10),
             child: Row(
               children: [
                 IconButton(
                   icon: const Icon(Icons.attach_file, color: Colors.purple),
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Attach file feature coming soon!"),
-                      ),
+                      SnackBar(content: Text("Attach featurecoming soon!")),
                     );
                   },
                 ),
@@ -115,18 +175,18 @@ class _ApartmentChatScreenState extends State<ApartmentChatScreen> {
                   child: TextField(
                     controller: _messageController,
                     decoration: InputDecoration(
-                      hintText: "Type a message...",
+                      hintText: "Type a message... ",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 10),
+                SizedBox(width: 10),
                 FloatingActionButton(
                   onPressed: _sendMessage,
                   backgroundColor: Colors.purple,
-                  child: const Icon(Icons.send, color: Colors.white),
+                  child: Icon(Icons.send, color: Colors.white),
                 ),
               ],
             ),
