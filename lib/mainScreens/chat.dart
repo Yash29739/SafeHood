@@ -56,7 +56,7 @@ class _ApartmentChatScreenState extends State<ApartmentChatScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
-          "Appartment Group Chat",
+          "Apartment Group Chat",
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontFamily: "Merriweather",
