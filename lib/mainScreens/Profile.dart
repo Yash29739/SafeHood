@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:safehome/login_signup/login_screen.dart';
 import 'package:safehome/services/firestore_service.dart';
 import 'package:safehome/services/localServices.dart';
+import 'package:safehome/subScreens/editingScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -15,8 +16,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   bool isIn = true;
   List<Map<String, String>> emergencyContacts = [];
-
-  final Map<String, TextEditingController> controllers = {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  Map<String, TextEditingController> controllers = {
     "Name": TextEditingController(text: "John Doe"),
     "Email ID": TextEditingController(text: "john.doe@example.com"),
     "Occupation": TextEditingController(text: "Software Engineer"),
@@ -32,6 +33,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ),
     "Original Place of Residence": TextEditingController(text: "Bangalore"),
   };
+
+  @override
+  void initState() {
+    loadUserData(); // Load Firestore data when the screen opens
+    super.initState();
+  }
+
+  void loadUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userId');
+
+    if (userId != null) {
+      DocumentSnapshot snapshot =
+          await _firestore.collection("users").doc(userId).get();
+
+      if (snapshot.exists) {
+        Map<String, dynamic> userData = snapshot.data() as Map<String, dynamic>;
+
+        // Populate controllers with fetched data
+        controllers["Name"]!.text = userData["name"] ?? "John Doe";
+        controllers["Email ID"]!.text =
+            userData["email"] ?? "john.doe@example.com";
+        controllers["Occupation"]!.text =
+            userData["occupation"] ?? "Software Engineer";
+        controllers["Date of Birth"]!.text = userData["dob"] ?? "1995-06-15";
+        controllers["Age"]!.text = userData["age"] ?? "28";
+        controllers["Door Number"]!.text = userData["doorNumber"] ?? "A-101";
+        controllers["Total People Living"]!.text =
+            userData["totalPeople"] ?? "4";
+        controllers["Flat Code"]!.text = userData["flatCode"] ?? "SH101";
+        controllers["Flat Name"]!.text = userData["flatName"] ?? "Safe Haven";
+        controllers["Phone Number"]!.text = userData["phone"] ?? "9876543210";
+        controllers["About Yourself"]!.text =
+            userData["about"] ?? "Friendly and helpful neighbor.";
+        controllers["Original Place of Residence"]!.text =
+            userData["residence"] ?? "Bangalore";
+
+        // Load emergency contacts
+        if (userData["emergencyContacts"] != null) {
+          List<dynamic> contacts = userData["emergencyContacts"];
+
+          // Correct type casting with map
+          emergencyContacts =
+              contacts
+                  .map((contact) {
+                    return {
+                      "Name": (contact["name"] ?? "").toString(),
+                      "Phone": (contact["phone"] ?? "").toString(),
+                    };
+                  })
+                  .toList()
+                  .cast<Map<String, String>>();
+        }
+      }
+    }
+  }
 
   void _logout(BuildContext context) async {
     // Add logout logic here
@@ -61,20 +118,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  void _toggleInOut() {
-    setState(() {
-      isIn = !isIn;
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(isIn ? "Marked as In" : "Marked as Out")),
-    );
-  }
+  void _editProfile() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  void _editProfile() {
+    String? userId = prefs.getString('userId');
+
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EditProfileScreen(controllers: controllers),
+        builder: (context) => EditUserScreen(userEmail: userId!),
       ),
     ).then((_) => setState(() {}));
   }
@@ -176,24 +228,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 children: [
                   const Text(
-                    "⚠️ Your In/Out status helps neighbors know if you're available.",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 12, color: Colors.black54),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: _toggleInOut,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: isIn ? Colors.green : Colors.red,
-                    ),
-                    child: Text(
-                      isIn ? "Mark as Out" : "Mark as In",
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  const Text(
                     "⚠️ Ensure your emergency contacts are up-to-date.",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 12, color: Colors.black54),
@@ -213,63 +247,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-// Edit Profile Screen
-class EditProfileScreen extends StatefulWidget {
-  final Map<String, TextEditingController> controllers;
-
-  const EditProfileScreen({super.key, required this.controllers});
-
-  @override
-  _EditProfileScreenState createState() => _EditProfileScreenState();
-}
-
-class _EditProfileScreenState extends State<EditProfileScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Edit Profile"),
-        backgroundColor: Colors.purple,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: [
-            for (var entry in widget.controllers.entries)
-              _buildProfileField(entry.key, entry.value),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.purple),
-              child: const Text(
-                "Save Changes",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildProfileField(String label, TextEditingController controller) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: TextFormField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: label,
-          filled: true,
-          fillColor: Colors.purple[50],
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
       ),
     );
