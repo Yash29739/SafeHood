@@ -19,7 +19,7 @@ class AuthController {
           await users.where("email", isEqualTo: email).limit(1).get();
 
       if (snapshot.docs.isEmpty) {
-        return 'User not found or email does not match USN';
+        return 'User not found';
       }
 
       // Extract user data

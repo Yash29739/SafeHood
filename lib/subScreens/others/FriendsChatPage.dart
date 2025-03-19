@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MaterialApp(home: FriendsChatPage()));
-}
-
 class FriendsChatPage extends StatelessWidget {
   const FriendsChatPage({super.key});
 
@@ -11,7 +7,7 @@ class FriendsChatPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFF2E3FF),
-    
+
       appBar: AppBar(
         automaticallyImplyLeading: false,
         toolbarHeight: 100,
@@ -42,7 +38,10 @@ class FriendsChatPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Online Friends", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const Text(
+            "Online Friends",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -74,17 +73,40 @@ class FriendsChatPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Recent Chats", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const Text(
+            "Recent Chats",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 10),
-          _chatItem("Sarah Kim", "Hey, are you free for coffee later?", "2m", Colors.purpleAccent),
-          _chatItem("Mike Rodriguez", "Thanks for helping with the move!", "1h", Colors.lightBlueAccent),
-          _chatItem("Emma Lee", "Community BBQ this weekend?", "3h", Colors.orangeAccent),
+          _chatItem(
+            "Sarah Kim",
+            "Hey, are you free for coffee later?",
+            "2m",
+            Colors.purpleAccent,
+          ),
+          _chatItem(
+            "Mike Rodriguez",
+            "Thanks for helping with the move!",
+            "1h",
+            Colors.lightBlueAccent,
+          ),
+          _chatItem(
+            "Emma Lee",
+            "Community BBQ this weekend?",
+            "3h",
+            Colors.orangeAccent,
+          ),
         ],
       ),
     );
   }
 
-  Widget _chatItem(String name, String message, String time, Color avatarColor) {
+  Widget _chatItem(
+    String name,
+    String message,
+    String time,
+    Color avatarColor,
+  ) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       padding: const EdgeInsets.all(12),
@@ -119,10 +141,22 @@ class FriendsChatPage extends StatelessWidget {
       showSelectedLabels: false,
       showUnselectedLabels: false,
       items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home, size: 30), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(Icons.chat, size: 30), label: "Chat"),
-        BottomNavigationBarItem(icon: Icon(Icons.store, size: 30), label: "Store"),
-        BottomNavigationBarItem(icon: Icon(Icons.person, size: 30), label: "Profile"),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home, size: 30),
+          label: "Home",
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.chat, size: 30),
+          label: "Chat",
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.store, size: 30),
+          label: "Store",
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person, size: 30),
+          label: "Profile",
+        ),
       ],
     );
   }
@@ -131,9 +165,12 @@ class FriendsChatPage extends StatelessWidget {
     return BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(12),
-      boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3))],
+      boxShadow: [
+        BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3)),
+      ],
     );
   }
+
   Widget _buildHeader() {
     return Row(
       children: [

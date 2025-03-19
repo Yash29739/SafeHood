@@ -1,12 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MaterialApp(
-    home: ResidentStatusPage(),
-    debugShowCheckedModeBanner: false,
-  ));
-}
-
 class ResidentStatusPage extends StatelessWidget {
   const ResidentStatusPage({super.key});
 
@@ -58,7 +51,14 @@ class ResidentStatusPage extends StatelessWidget {
   Widget _statusColumn(String count, String label, Color color) {
     return Column(
       children: [
-        Text(count, style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: color)),
+        Text(
+          count,
+          style: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
+        ),
         Text(label, style: TextStyle(fontSize: 14, color: Colors.black54)),
       ],
     );
@@ -74,7 +74,10 @@ class ResidentStatusPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ListTile(
-              title: Text('Resident Activity', style: TextStyle(fontWeight: FontWeight.bold)),
+              title: Text(
+                'Resident Activity',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               trailing: ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.purple),
@@ -90,7 +93,12 @@ class ResidentStatusPage extends StatelessWidget {
     );
   }
 
-  Widget _residentTile(String name, String apt, Color statusColor, String status) {
+  Widget _residentTile(
+    String name,
+    String apt,
+    Color statusColor,
+    String status,
+  ) {
     return Card(
       margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -104,7 +112,10 @@ class ResidentStatusPage extends StatelessWidget {
             color: statusColor,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Text(status, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          child: Text(
+            status,
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
         ),
       ),
     );
@@ -119,11 +130,29 @@ class ResidentStatusPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Recent Activity Log', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(
+              'Recent Activity Log',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             SizedBox(height: 8),
-            _logEntry(Icons.login, 'Emily Rodriguez checked in', '2 min ago', Colors.green),
-            _logEntry(Icons.logout, 'Michael Chen checked out', '15 min ago', Colors.red),
-            _logEntry(Icons.login, 'Sarah Johnson checked in', '1 hour ago', Colors.green),
+            _logEntry(
+              Icons.login,
+              'Emily Rodriguez checked in',
+              '2 min ago',
+              Colors.green,
+            ),
+            _logEntry(
+              Icons.logout,
+              'Michael Chen checked out',
+              '15 min ago',
+              Colors.red,
+            ),
+            _logEntry(
+              Icons.login,
+              'Sarah Johnson checked in',
+              '1 hour ago',
+              Colors.green,
+            ),
           ],
         ),
       ),
@@ -147,10 +176,18 @@ class ResidentStatusPage extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 16),
       ),
       child: Center(
-        child: Text('Generate Activity Report', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+        child: Text(
+          'Generate Activity Report',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     );
   }
+
   Widget _buildHeader() {
     return Row(
       children: [

@@ -17,7 +17,6 @@ class Friend {
 }
 
 class FriendListScreen extends StatelessWidget {
-  // Sample list of friends
   final List<Friend> friends = [
     Friend(
       name: 'Alice Brown',

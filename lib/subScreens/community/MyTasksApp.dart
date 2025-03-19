@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyTasksApp());
-}
-
 class MyTasksApp extends StatelessWidget {
   const MyTasksApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: MyTasksPage(),
-    );
+    return MaterialApp(debugShowCheckedModeBanner: false, home: MyTasksPage());
   }
 }
 
@@ -28,14 +21,17 @@ class MyTasksPage extends StatelessWidget {
         toolbarHeight: 100,
         backgroundColor: Color(0xFFCC00FF),
         title: _buildHeader(),
-       
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
             _taskSection("Today's Tasks", [
-              _taskItem("Complete project presentation", "2:30 PM", Colors.cyan),
+              _taskItem(
+                "Complete project presentation",
+                "2:30 PM",
+                Colors.cyan,
+              ),
               _taskItem("Review team updates", "4:00 PM", Colors.purple),
             ]),
             _taskSection("Tomorrow", [
@@ -48,8 +44,18 @@ class MyTasksPage extends StatelessWidget {
               _taskItem("Team building event", "Saturday", Colors.orange),
             ]),
             _taskSection("Completed", [
-              _taskItem("Morning standup", "Today", Colors.green, isCompleted: true),
-              _taskItem("Email follow-ups", "Today", Colors.green, isCompleted: true),
+              _taskItem(
+                "Morning standup",
+                "Today",
+                Colors.green,
+                isCompleted: true,
+              ),
+              _taskItem(
+                "Email follow-ups",
+                "Today",
+                Colors.green,
+                isCompleted: true,
+              ),
             ], titleColor: Colors.teal),
           ],
         ),
@@ -57,7 +63,11 @@ class MyTasksPage extends StatelessWidget {
     );
   }
 
-  Widget _taskSection(String title, List<Widget> tasks, {Color titleColor = Colors.black}) {
+  Widget _taskSection(
+    String title,
+    List<Widget> tasks, {
+    Color titleColor = Colors.black,
+  }) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8),
       child: Card(
@@ -68,7 +78,14 @@ class MyTasksPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: titleColor)),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: titleColor,
+                ),
+              ),
               SizedBox(height: 8),
               Column(children: tasks),
             ],
@@ -78,7 +95,12 @@ class MyTasksPage extends StatelessWidget {
     );
   }
 
-  Widget _taskItem(String task, String time, Color dotColor, {bool isCompleted = false}) {
+  Widget _taskItem(
+    String task,
+    String time,
+    Color dotColor, {
+    bool isCompleted = false,
+  }) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 6),
       child: Row(
@@ -86,7 +108,11 @@ class MyTasksPage extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(isCompleted ? Icons.check_circle : Icons.circle, color: dotColor, size: 18),
+              Icon(
+                isCompleted ? Icons.check_circle : Icons.circle,
+                color: dotColor,
+                size: 18,
+              ),
               SizedBox(width: 10),
               Text(task, style: TextStyle(fontSize: 16)),
             ],
@@ -96,7 +122,8 @@ class MyTasksPage extends StatelessWidget {
       ),
     );
   }
-   Widget _buildHeader() {
+
+  Widget _buildHeader() {
     return Row(
       children: [
         Container(
