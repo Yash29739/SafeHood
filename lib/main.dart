@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
@@ -6,8 +8,10 @@ import 'package:safehome/firebase_options.dart';
 import 'package:safehome/login_signup/login_screen.dart';
 import 'package:safehome/login_signup/signup_screen.dart';
 import 'package:safehome/mainScreens/LandingScreen.dart';
-import 'package:safehome/mainScreens/role_selection_screen.dart';
+import 'package:safehome/mainScreens/admin_dashboard.dart';
+import 'package:safehome/mainScreens/security_dashboard.dart';
 import 'package:safehome/services/localServices.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,23 +28,24 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Safe Hood',
       theme: ThemeData(primarySwatch: Colors.purple),
-      home: SplashScreen(),
+      home: const SplashScreen(),
       routes: {
         '/landingScreen': (context) => const LandingScreen(),
         '/signup': (context) => const SignupScreen(),
-        '/roleSelection': (context) => RoleSelectionScreen(),
       },
     );
   }
 }
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  Widget? nextScreen;
+  Widget nextScreen = LoginScreen(); // ✅ Default screen
 
   @override
   void initState() {
@@ -49,10 +54,71 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _checkLoginStatus() async {
-    bool isLoggedIn = await isUserLoggedIn();
-    setState(() {
-      nextScreen = isLoggedIn ?  LandingScreen() : LoginScreen();
-    });
+    bool isLoggedIn = await isUserLoggedIn(); // Checks login status
+
+    if (isLoggedIn) {
+      // ✅ Get userId from SharedPreferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? userId = prefs.getString("userId");
+
+      if (userId != null) {
+        try {
+          // ✅ Fetch user data from Firestore
+          DocumentSnapshot userDoc =
+              await FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(userId)
+                  .get();
+
+          if (userDoc.exists) {
+            // ✅ Get role from Firestore
+            String role =
+                userDoc["role"] ?? "User"; // Default to "User" if null
+
+            // ✅ Navigate based on role
+            switch (role) {
+              case "Admin":
+                setState(() {
+                  nextScreen = AdminDashboard();
+                });
+                break;
+              case "Security":
+                setState(() {
+                  nextScreen = SecurityDashboard();
+                });
+                break;
+              case "User":
+              default:
+                setState(() {
+                  nextScreen = LandingScreen();
+                });
+                break;
+            }
+          } else {
+            // If user document doesn't exist, go to LoginScreen
+            setState(() {
+              nextScreen = LoginScreen();
+            });
+          }
+        } catch (e) {
+          print("Error fetching user data: $e");
+          // Error handling — default to LoginScreen
+          setState(() {
+            nextScreen = LoginScreen();
+          });
+        }
+      } else {
+        // No userId found in SharedPreferences, go to LoginScreen
+        setState(() {
+          nextScreen = LoginScreen();
+        });
+      }
+    } else {
+      // If not logged in, navigate to LoginScreen
+      setState(() {
+        nextScreen = LoginScreen();
+      });
+    }
   }
 
   @override
@@ -67,8 +133,8 @@ class _SplashScreenState extends State<SplashScreen> {
               borderRadius: BorderRadius.circular(30),
               child: Image.asset('assets/logo.jpg', width: 150),
             ),
-            SizedBox(height: 10),
-            Text(
+            const SizedBox(height: 10),
+            const Text(
               "SafeHood",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -79,13 +145,13 @@ class _SplashScreenState extends State<SplashScreen> {
           ],
         ),
       ),
-      nextScreen: RoleSelectionScreen(),
+      nextScreen: nextScreen, // ✅ Correctly assigned nextScreen
       splashIconSize: 520,
       centered: true,
       duration: 2000,
       splashTransition: SplashTransition.fadeTransition,
       pageTransitionType: PageTransitionType.fade,
-      animationDuration: Duration(milliseconds: 2000),
+      animationDuration: const Duration(milliseconds: 2000),
     );
   }
 }

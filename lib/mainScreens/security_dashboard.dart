@@ -89,6 +89,7 @@ class DashboardCard extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
+            
           ],
         ),
       ),

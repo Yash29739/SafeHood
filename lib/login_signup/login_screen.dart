@@ -1,7 +1,11 @@
 import 'dart:developer' as developer;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:safehome/login_signup/forgotPassword.dart';
 import 'package:safehome/mainScreens/LandingScreen.dart';
+import 'package:safehome/mainScreens/admin_dashboard.dart';
+import 'package:safehome/mainScreens/security_dashboard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'signup_screen.dart';
 import '../services/firestore_service.dart';
 
@@ -39,14 +43,39 @@ class _LoginScreenState extends State<LoginScreen> {
         email: email,
         password: password,
       );
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? userId = prefs.getString("userId");
+      DocumentSnapshot userDoc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(userId)
+              .get();
+      String role = userDoc["role"] ?? "User";
+
+      switch (role) {
+        case "Admin":
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AdminDashboard()),
+          );
+          break;
+        case "Security":
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SecurityDashboard()),
+          );
+          break;
+        case "User":
+        default:
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LandingScreen()),
+          );
+          break;
+      }
 
       if (result == null) {
         _showSuccess("Logged in Successfully!", context);
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => LandingScreen()),
-        );
       } else {
         _showError(result, context);
       }
