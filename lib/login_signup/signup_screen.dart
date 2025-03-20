@@ -122,6 +122,7 @@ class _SignupScreenState extends State<SignupScreen> {
         "description": desc,
         "origin": origin,
         "password": hashedPass,
+        "role": selectedRole,
         'timestamp': FieldValue.serverTimestamp(),
       });
       _showSuccess("Account created successfully", context);
@@ -133,6 +134,9 @@ class _SignupScreenState extends State<SignupScreen> {
       _showError("$e", context);
     }
   }
+
+  String selectedRole = "User";
+  final List<String> roles = ["User", "Admin", "Security"];
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +186,28 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-
+                  DropdownButtonFormField<String>(
+                    value: selectedRole,
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    items:
+                        roles.map((String role) {
+                          return DropdownMenuItem<String>(
+                            value: role,
+                            child: Text(role),
+                          );
+                        }).toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedRole = newValue!;
+                      });
+                    },
+                  ),
                   // Input Fields
                   _buildTextField("Name*", nameController, (value) {
                     if (value == null || value.isEmpty) {

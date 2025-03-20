@@ -1,5 +1,4 @@
 import 'dart:developer' as developer;
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:safehome/login_signup/forgotPassword.dart';
 import 'package:safehome/mainScreens/LandingScreen.dart';
@@ -16,8 +15,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  String selectedRole = "User";
-  final List<String> roles = ["User", "Admin", "Security"];
 
   void _showError(String message, BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -45,12 +42,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (result == null) {
         _showSuccess("Logged in Successfully!", context);
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(email)
-            .update({
-          'role': selectedRole,
-        });
 
         Navigator.pushReplacement(
           context,
@@ -116,38 +107,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                DropdownButtonFormField<String>(
-                  value: selectedRole,
-                  decoration: InputDecoration(
-                    fillColor: Colors.white,
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  items: roles.map((String role) {
-                    return DropdownMenuItem<String>(
-                      value: role,
-                      child: Text(role),
-                    );
-                  }).toList(),
-                  onChanged: (newValue) {
-                    setState(() {
-                      selectedRole = newValue!;
-                    });
-                  },
-                ),
-                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ForgotPassword(),
-                        ),
-                      ),
+                      onPressed:
+                          () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ForgotPassword(),
+                            ),
+                          ),
                       child: const Text(
                         'Forgot Password?',
                         style: TextStyle(

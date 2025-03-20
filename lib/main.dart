@@ -49,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _checkLoginStatus() async {
     bool isLoggedIn = await isUserLoggedIn();
     setState(() {
-      nextScreen = isLoggedIn ?  LandingScreen() : LoginScreen();
+      nextScreen = isLoggedIn ? LandingScreen() : LoginScreen();
     });
   }
 
