@@ -1,61 +1,23 @@
-import 'dart:developer' as developer;
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:safehome/login_signup/forgotPassword.dart';
-import 'package:safehome/mainScreens/LandingScreen.dart';
-import 'signup_screen.dart';
-import '../services/firestore_service.dart';
+import 'package:safehome/mainScreens/admin_dashboard.dart';
+import 'package:safehome/login_signup/admin_signup_screen.dart';
+import 'package:safehome/login_signup/admin_forgot_password.dart';
 
-class LoginScreen extends StatefulWidget {
-  LoginScreen({super.key});
-
+class AdminLoginScreen extends StatefulWidget {
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _AdminLoginScreenState createState() => _AdminLoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController passwordController = TextEditingController();
+class _AdminLoginScreenState extends State<AdminLoginScreen> {
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
-  void _showError(String message, BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.red),
+  void logInAdmin() {
+    // Directly navigate to AdminDashboard without authentication
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => AdminDashboard()),
     );
-  }
-
-  void _showSuccess(String message, BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.green),
-    );
-  }
-
-  void logInUser(BuildContext context) async {
-    String? email = emailController.text;
-    String? password = passwordController.text;
-
-    AuthController loginAuth = AuthController();
-
-    try {
-      String? result = await loginAuth.loginUser(
-        email: email,
-        password: password,
-      );
-
-      if (result == null) {
-        _showSuccess("Logged in Successfully!", context);
-        await FirebaseFirestore.instance.collection('users').doc(email);
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => LandingScreen()),
-        );
-      } else {
-        _showError(result, context);
-      }
-    } catch (e) {
-      developer.log("Error during login: $e");
-      _showError(e.toString(), context);
-    }
   }
 
   @override
@@ -69,33 +31,27 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
-                  child: Image.asset('assets/logo.jpg', width: 120),
-                ),
-                const SizedBox(height: 20),
                 Text(
-                  "User Login",
+                  "Admin Login",
                   style: TextStyle(
                     fontSize: 30,
-                    color: Color(0xFF6A007C),
                     fontWeight: FontWeight.bold,
-                    fontFamily: "Merriweather",
+                    color: Color(0xFF6A007C),
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20),
                 TextField(
                   controller: emailController,
                   decoration: InputDecoration(
                     fillColor: Colors.white,
                     filled: true,
-                    labelText: 'Email',
+                    labelText: 'Admin Email',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20),
                 TextField(
                   controller: passwordController,
                   obscureText: true,
@@ -108,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -116,32 +72,27 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ForgotPassword(),
+                          builder: (context) => ForgotPasswordScreen(),
                         ),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Forgot Password?',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 0, 140, 255),
-                        ),
+                        style: TextStyle(color: Color.fromARGB(255, 0, 140, 255)),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 20),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF6A007C),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),
                     ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 40,
-                      vertical: 12,
-                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                   ),
-                  onPressed: () => logInUser(context),
-                  child: const Text(
+                  onPressed: logInAdmin, // Now directly takes to AdminDashboard
+                  child: Text(
                     'Login',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -149,25 +100,23 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Not Registered?'),
+                    Text("Not Registered?"),
                     TextButton(
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const SignupScreen(),
+                            builder: (context) => AdminSignupScreen(),
                           ),
                         );
                       },
-                      child: const Text(
+                      child: Text(
                         'Create an Account',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 0, 140, 255),
-                        ),
+                        style: TextStyle(color: Color.fromARGB(255, 0, 140, 255)),
                       ),
                     ),
                   ],

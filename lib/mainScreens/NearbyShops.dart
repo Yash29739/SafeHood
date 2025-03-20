@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart'; // Import url_launcher for opening Google Maps in browser
 
 class NearByShops extends StatefulWidget {
   const NearByShops({super.key});
@@ -10,126 +11,81 @@ class NearByShops extends StatefulWidget {
 class _NearByShopsState extends State<NearByShops> {
   final TextEditingController _searchController = TextEditingController();
 
-  List<Map<String, String>> shops = [
+  // Predefined list of shops with their location (latitude and longitude)
+  List<Map<String, dynamic>> shops = [
     {
       "name": "ABC Supermarket",
-      "location": "MG Road",
       "contact": "9876543210",
       "hours": "8 AM - 9 PM",
+      "latitude": 37.7749, // Example latitude
+      "longitude": -122.4194, // Example longitude
     },
     {
-      "name": "Fresh Mart",
-      "location": "Brigade Road",
-      "contact": "9876504321",
-      "hours": "7 AM - 10 PM",
+      "name": "XYZ Electronics",
+      "contact": "9123456789",
+      "hours": "10 AM - 7 PM",
+      "latitude": 34.0522, // Example latitude
+      "longitude": -118.2437, // Example longitude
     },
     {
-      "name": "City Store",
-      "location": "Indiranagar",
-      "contact": "9876123456",
-      "hours": "9 AM - 8 PM",
+      "name": "Local Bakery",
+      "contact": "9456781234",
+      "hours": "6 AM - 8 PM",
+      "latitude": 40.7128, // Example latitude
+      "longitude": -74.0060, // Example longitude
     },
     {
-      "name": "Quick Buy",
-      "location": "Koramangala",
-      "contact": "9876234567",
-      "hours": "6 AM - 11 PM",
+      "name": "Fashion Hub",
+      "contact": "9871234567",
+      "hours": "11 AM - 9 PM",
+      "latitude": 51.5074, // Example latitude
+      "longitude": -0.1278, // Example longitude
     },
     {
-      "name": "Daily Needs",
-      "location": "Jayanagar",
-      "contact": "9876345678",
-      "hours": "8 AM - 9 PM",
+      "name": "Pet Care Center",
+      "contact": "9734567890",
+      "hours": "9 AM - 6 PM",
+      "latitude": 48.8566, // Example latitude
+      "longitude": 2.3522, // Example longitude
     },
   ];
 
-  List<Map<String, String>> filteredShops = [];
+  List<Map<String, dynamic>> filteredShops = [];
 
   @override
   void initState() {
     super.initState();
-    filteredShops = shops;
+    filteredShops = shops; // Initialize filtered list with predefined shops
   }
 
   // Function to filter shops based on search
   void _filterShops(String query) {
     setState(() {
-      filteredShops =
-          shops
-              .where(
-                (shop) =>
-                    shop["name"]!.toLowerCase().contains(query.toLowerCase()) ||
-                    shop["location"]!.toLowerCase().contains(
-                      query.toLowerCase(),
-                    ),
-              )
-              .toList();
+      filteredShops = shops
+          .where(
+            (shop) =>
+                shop["name"]!.toLowerCase().contains(query.toLowerCase()) ||
+                shop["contact"]!.toLowerCase().contains(query.toLowerCase()),
+          )
+          .toList();
     });
   }
 
-  // Function to add a new shop
-  void _addShopDialog() {
-    TextEditingController nameController = TextEditingController();
-    TextEditingController locationController = TextEditingController();
-    TextEditingController contactController = TextEditingController();
-    TextEditingController hoursController = TextEditingController();
+  // Function to open Google Maps in the browser
+  Future<void> _openMapInBrowser(double latitude, double longitude) async {
+    final Uri mapUrl = Uri.parse('https://maps.google.com/?q=$latitude,$longitude');
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Add New Shop"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: nameController,
-                decoration: const InputDecoration(labelText: "Shop Name"),
-              ),
-              TextField(
-                controller: locationController,
-                decoration: const InputDecoration(labelText: "Location"),
-              ),
-              TextField(
-                controller: contactController,
-                decoration: const InputDecoration(labelText: "Contact Number"),
-                keyboardType: TextInputType.phone,
-              ),
-              TextField(
-                controller: hoursController,
-                decoration: const InputDecoration(labelText: "Opening Hours"),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (nameController.text.isNotEmpty &&
-                    locationController.text.isNotEmpty &&
-                    contactController.text.isNotEmpty &&
-                    hoursController.text.isNotEmpty) {
-                  setState(() {
-                    shops.add({
-                      "name": nameController.text,
-                      "location": locationController.text,
-                      "contact": contactController.text,
-                      "hours": hoursController.text,
-                    });
-                    filteredShops = shops;
-                  });
-                }
-                Navigator.pop(context);
-              },
-              child: const Text("Add"),
-            ),
-          ],
-        );
-      },
-    );
+    // Debugging: print the URL to make sure it's correct
+    print('Opening map in browser with URL: $mapUrl');
+
+    // Launch the map URL in a browser
+    if (await canLaunch(mapUrl.toString())) {
+      await launch(mapUrl.toString());
+    } else {
+      // Show error message if the map can't be opened
+      print('Could not open the map in browser.');
+      throw 'Could not open the map in browser.';
+    }
   }
 
   @override
@@ -169,6 +125,7 @@ class _NearByShopsState extends State<NearByShops> {
             child: ListView.builder(
               itemCount: filteredShops.length,
               itemBuilder: (context, index) {
+                final shop = filteredShops[index];
                 return Card(
                   margin: const EdgeInsets.symmetric(
                     horizontal: 10,
@@ -184,23 +141,11 @@ class _NearByShopsState extends State<NearByShops> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          filteredShops[index]["name"]!,
+                          shop["name"]!,
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
-                        ),
-                        const SizedBox(height: 5),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.location_on,
-                              color: Color.fromARGB(255, 175, 139, 220),
-                              size: 18,
-                            ),
-                            const SizedBox(width: 5),
-                            Text(filteredShops[index]["location"]!),
-                          ],
                         ),
                         const SizedBox(height: 5),
                         Row(
@@ -211,7 +156,7 @@ class _NearByShopsState extends State<NearByShops> {
                               size: 18,
                             ),
                             const SizedBox(width: 5),
-                            Text(filteredShops[index]["contact"]!),
+                            Text(shop["contact"]!),
                           ],
                         ),
                         const SizedBox(height: 5),
@@ -223,25 +168,33 @@ class _NearByShopsState extends State<NearByShops> {
                               size: 18,
                             ),
                             const SizedBox(width: 5),
-                            Text(filteredShops[index]["hours"]!),
+                            Text(shop["hours"]!),
+                          ],
+                        ),
+                        const SizedBox(height: 5),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.location_on,
+                              color: Colors.red,
+                              size: 18,
+                            ),
+                            const SizedBox(width: 5),
+                            GestureDetector(
+                              onTap: () {
+                                _openMapInBrowser(shop["latitude"], shop["longitude"]);
+                              },
+                              child: const Text(
+                                "Open in Google Maps (Browser)",
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                         const Divider(thickness: 1),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.delete,
-                              color: Color.fromARGB(255, 178, 144, 220),
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                shops.removeAt(index);
-                                filteredShops = shops;
-                              });
-                            },
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -250,11 +203,6 @@ class _NearByShopsState extends State<NearByShops> {
             ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addShopDialog,
-        backgroundColor: Colors.purple,
-        child: const Icon(Icons.add, size: 30, color: Colors.white),
       ),
     );
   }
