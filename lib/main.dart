@@ -3,10 +3,9 @@ import 'package:page_transition/page_transition.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:safehome/firebase_options.dart';
-import 'package:safehome/login_signup/login_screen.dart';
 import 'package:safehome/login_signup/signup_screen.dart';
 import 'package:safehome/mainScreens/LandingScreen.dart';
-import 'package:safehome/services/localServices.dart';
+import 'package:safehome/mainScreens/role_selection_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,32 +26,13 @@ class MyApp extends StatelessWidget {
       routes: {
         '/landingScreen': (context) => const LandingScreen(),
         '/signup': (context) => const SignupScreen(),
+        '/roleSelection': (context) => RoleSelectionScreen(),
       },
     );
   }
 }
 
-class SplashScreen extends StatefulWidget {
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  Widget? nextScreen;
-
-  @override
-  void initState() {
-    super.initState();
-    _checkLoginStatus();
-  }
-
-  Future<void> _checkLoginStatus() async {
-    bool isLoggedIn = await isUserLoggedIn();
-    setState(() {
-      nextScreen = isLoggedIn ?  LandingScreen() : LoginScreen();
-    });
-  }
-
+class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedSplashScreen(
@@ -77,9 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
           ],
         ),
       ),
-      nextScreen:
-          nextScreen ??
-          const Scaffold(body: Center(child: CircularProgressIndicator())),
+      nextScreen: RoleSelectionScreen(),
       splashIconSize: 520,
       centered: true,
       duration: 2000,
