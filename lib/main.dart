@@ -6,6 +6,7 @@ import 'package:safehome/firebase_options.dart';
 import 'package:safehome/login_signup/login_screen.dart';
 import 'package:safehome/login_signup/signup_screen.dart';
 import 'package:safehome/mainScreens/LandingScreen.dart';
+import 'package:safehome/mainScreens/role_selection_screen.dart';
 import 'package:safehome/services/localServices.dart';
 
 Future<void> main() async {
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/landingScreen': (context) => const LandingScreen(),
         '/signup': (context) => const SignupScreen(),
+        '/roleSelection': (context) => RoleSelectionScreen(),
       },
     );
   }
@@ -49,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _checkLoginStatus() async {
     bool isLoggedIn = await isUserLoggedIn();
     setState(() {
-      nextScreen = isLoggedIn ? LandingScreen() : LoginScreen();
+      nextScreen = isLoggedIn ?  LandingScreen() : LoginScreen();
     });
   }
 
@@ -77,9 +79,7 @@ class _SplashScreenState extends State<SplashScreen> {
           ],
         ),
       ),
-      nextScreen:
-          nextScreen ??
-          const Scaffold(body: Center(child: CircularProgressIndicator())),
+      nextScreen: RoleSelectionScreen(),
       splashIconSize: 520,
       centered: true,
       duration: 2000,

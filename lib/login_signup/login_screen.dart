@@ -51,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _showError(result, context);
       }
     } catch (e) {
-      developer.log("Error during login: \$e");
+      developer.log("Error during login: $e");
       _showError(e.toString(), context);
     }
   }
@@ -73,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  "User Registration",
+                  "User Login",
                   style: TextStyle(
                     fontSize: 30,
                     color: Color(0xFF6A007C),
