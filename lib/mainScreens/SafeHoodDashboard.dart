@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:safehome/subScreens/community/VisitorEntryScreen.dart';
 import 'package:safehome/subScreens/community/friend_list_screen.dart';
-import 'package:safehome/subScreens/community/in_out_screen.dart';
 import 'package:safehome/subScreens/community/todo_list_screen.dart';
 import 'package:safehome/subScreens/community/upcoming_events_screen.dart';
 import 'package:safehome/subScreens/services/CommunityNoticeBoard.dart';
@@ -81,9 +81,9 @@ class _SafeHoodDashboardState extends State<SafeHoodDashboard> {
                           context,
                         ),
                         _gridItem(
-                          "IN/OUT",
+                          "Visitor's",
                           Icons.sync_alt,
-                          InOutScreen(),
+                          VisitorEntryScreen(),
                           context,
                         ),
                         _gridItem(
