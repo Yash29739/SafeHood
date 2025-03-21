@@ -4,10 +4,6 @@ class SecurityDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Security Dashboard"),
-        backgroundColor: Color(0xFF6A007C),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -71,9 +67,7 @@ class DashboardCard extends StatelessWidget {
       onTap: onTap,
       child: Card(
         color: Color(0xFFF2E3FF),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         elevation: 5,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -89,7 +83,6 @@ class DashboardCard extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            
           ],
         ),
       ),

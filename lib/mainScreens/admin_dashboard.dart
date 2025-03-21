@@ -1,18 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:safehome/login_signup/login_screen.dart';
-import 'package:safehome/services/firestore_service.dart';
-import 'package:safehome/services/localServices.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AdminDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Admin Dashboard"),
-        backgroundColor: Color(0xFF6A007C),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -69,33 +60,6 @@ class DashboardCard extends StatelessWidget {
   final VoidCallback onTap;
 
   DashboardCard({required this.title, required this.icon, required this.onTap});
-  void _logout(BuildContext context) async {
-    // Add logout logic here
-    AuthController logoutController = AuthController();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    String? userId = prefs.getString('userId');
-    logoutController.updateUserLoginStatus(userId, false);
-    logoutUser();
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("Logout successful!"),
-        backgroundColor: Colors.green,
-      ),
-    );
-
-    await FirebaseFirestore.instance.collection('userLogs').doc(userId).set({
-      'email': userId,
-      'action': "Logout",
-      'timestamp': FieldValue.serverTimestamp(),
-    });
-
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => LoginScreen()),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,11 +82,6 @@ class DashboardCard extends StatelessWidget {
                 color: Color(0xFF6A007C),
               ),
               textAlign: TextAlign.center,
-            ),
-            ElevatedButton(
-              onPressed: () => {_logout(context)},
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              child: Text("Logout", style: TextStyle(color: Colors.white)),
             ),
           ],
         ),

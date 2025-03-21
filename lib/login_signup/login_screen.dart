@@ -43,38 +43,43 @@ class _LoginScreenState extends State<LoginScreen> {
         email: email,
         password: password,
       );
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? userId = prefs.getString("userId");
-      DocumentSnapshot userDoc =
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(userId)
-              .get();
-      String role = userDoc["role"] ?? "User";
 
-      switch (role) {
-        case "Admin":
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AdminDashboard()),
-          );
-          break;
-        case "Security":
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => SecurityDashboard()),
-          );
-          break;
-        case "User":
-        default:
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => LandingScreen()),
-          );
-          break;
-      }
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // String? userId = prefs.getString("userId");
+      // DocumentSnapshot userDoc =
+      //     await FirebaseFirestore.instance
+      //         .collection('users')
+      //         .doc(userId)
+      //         .get();
+      // String role = userDoc["role"] ?? "User";
+
+      // switch (role) {
+      //   case "Admin":
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(builder: (context) => AdminDashboard()),
+      //     );
+      //     break;
+      //   case "Security":
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(builder: (context) => SecurityDashboard()),
+      //     );
+      //     break;
+      //   case "User":
+      //   default:
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(builder: (context) => LandingScreen()),
+      //     );
+      //     break;
+      // }
 
       if (result == null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => LandingScreen()),
+        );
         _showSuccess("Logged in Successfully!", context);
       } else {
         _showError(result, context);
