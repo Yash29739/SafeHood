@@ -42,12 +42,10 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
       firstDate: DateTime.now(),
       lastDate: DateTime(2101),
     );
-    if (pickedDate != null) {
-      setState(() {
-        _selectedDate = pickedDate;
-      });
+    setState(() {
+      _selectedDate = pickedDate;
+    });
     }
-  }
 
   void _selectTime() async {
     TimeOfDay? pickedTime = await showTimePicker(

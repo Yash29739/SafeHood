@@ -182,4 +182,4 @@ class _UpcomingEventsScreenState extends State<UpcomingEventsScreen> {
       ],
     );
   }
-} 
+}

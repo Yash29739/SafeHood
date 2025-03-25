@@ -7,7 +7,9 @@ import 'package:safehome/firebase_options.dart';
 import 'package:safehome/login_signup/login_screen.dart';
 import 'package:safehome/login_signup/signup_screen.dart';
 import 'package:safehome/mainScreens/LandingScreen.dart';
-import 'package:safehome/mainScreens/admin_dashboard.dart';
+import 'package:safehome/mainScreens/admins/dashbroadadmin.dart';
+// ignore: unused_import
+import 'package:safehome/subScreens/SecurityGrids/admin_dashboard.dart';
 import 'package:safehome/mainScreens/security_dashboard.dart';
 import 'package:safehome/services/localServices.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -60,14 +62,13 @@ class _SplashScreenState extends State<SplashScreen> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? userId = prefs.getString("userId");
 
-      if (userId != null) {
-        try {
-          // ✅ Fetch user data from Firestore
-          DocumentSnapshot userDoc =
-              await FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(userId)
-                  .get();
+      try {
+        // ✅ Fetch user data from Firestore
+        DocumentSnapshot userDoc =
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(userId)
+                .get();
 
           if (userDoc.exists) {
             setState(() {
@@ -78,21 +79,22 @@ class _SplashScreenState extends State<SplashScreen> {
             setState(() {
               nextScreen = LoginScreen();
             });
+
           }
-        } catch (e) {
-          print("Error fetching user data: $e");
-          // Error handling — default to LoginScreen
+        } else {
+          // If user document doesn't exist, go to LoginScreen
           setState(() {
             nextScreen = LoginScreen();
           });
         }
-      } else {
-        // No userId found in SharedPreferences, go to LoginScreen
+      } catch (e) {
+        print("Error fetching user data: $e");
+        // Error handling — default to LoginScreen
         setState(() {
           nextScreen = LoginScreen();
         });
       }
-    } else {
+        } else {
       // If not logged in, navigate to LoginScreen
       setState(() {
         nextScreen = LoginScreen();

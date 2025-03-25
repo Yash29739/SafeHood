@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:safehome/mainScreens/NearbyShops.dart';
 import 'package:safehome/mainScreens/Profile.dart';
 import 'package:safehome/mainScreens/SafeHoodDashboard.dart';
-import 'package:safehome/mainScreens/admin_dashboard.dart';
+import 'package:safehome/mainScreens/admins/dashbroadadmin.dart';
 import 'package:safehome/mainScreens/chat.dart';
 import 'package:safehome/mainScreens/security_dashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,22 +29,20 @@ class _LandingScreenState extends State<LandingScreen> {
   void checkUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString("userId");
-    if (userId != null) {
-      DocumentSnapshot userDoc =
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(userId)
-              .get();
-      if (userDoc.exists) {
-        setState(() {
-          role = userDoc["role"];
-          configurePages();
-        });
-      } else {
+    DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .get();
+    if (userDoc.exists) {
+      setState(() {
+        role = userDoc["role"];
         configurePages();
-      }
+      });
+    } else {
+      configurePages();
     }
-  }
+    }
 
   void configurePages() {
     switch (role) {
