@@ -139,7 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => EditUserScreen(userEmail: userId!),
+          builder: (context) => EditUserScreen(userEmail: userId),
         ),
       ).then((_) => setState(() {}));
     }
