@@ -1,11 +1,7 @@
 import 'dart:developer' as developer;
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:safehome/login_signup/forgotPassword.dart';
 import 'package:safehome/mainScreens/LandingScreen.dart';
-import 'package:safehome/mainScreens/admin_dashboard.dart';
-import 'package:safehome/mainScreens/security_dashboard.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'signup_screen.dart';
 import '../services/firestore_service.dart';
 
