@@ -70,29 +70,16 @@ class _SplashScreenState extends State<SplashScreen> {
                 .doc(userId)
                 .get();
 
-        if (userDoc.exists) {
-          // ✅ Get role from Firestore
-          String role =
-              userDoc["role"] ?? "User"; // Default to "User" if null
+          if (userDoc.exists) {
+            setState(() {
+              nextScreen = LandingScreen();
+            });
+          } else {
+            // If user document doesn't exist, go to LoginScreen
+            setState(() {
+              nextScreen = LoginScreen();
+            });
 
-          // ✅ Navigate based on role
-          switch (role) {
-            case "Admin":
-              setState(() {
-                nextScreen = AdminDashboard();
-              });
-              break;
-            case "Security":
-              setState(() {
-                nextScreen = SecurityDashboard();
-              });
-              break;
-            case "User":
-            default:
-              setState(() {
-                nextScreen = LandingScreen();
-              });
-              break;
           }
         } else {
           // If user document doesn't exist, go to LoginScreen
