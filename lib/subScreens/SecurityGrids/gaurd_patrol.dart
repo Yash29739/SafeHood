@@ -74,9 +74,9 @@ class _GuardPatrolPageState extends State<GuardPatrolPage> {
             child: Text("Cancel", style: TextStyle(color: Colors.red)),
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
+            style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 166, 52, 155)),
             onPressed: _addPatrolLog,
-            child: Text("Log"),
+            child: Text("Log",style: TextStyle(color: const Color.fromARGB(255, 40, 6, 39))),
           ),
         ],
       ),
