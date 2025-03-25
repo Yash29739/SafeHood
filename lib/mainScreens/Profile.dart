@@ -69,32 +69,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString('userId');
 
-    DocumentSnapshot snapshot =
-        await _firestore.collection("users").doc(userId).get();
+    if (userId != null) {
+      DocumentSnapshot snapshot =
+          await _firestore.collection("users").doc(userId).get();
 
-    if (snapshot.exists && snapshot.data() != null) {
-      Map<String, dynamic> userData = snapshot.data() as Map<String, dynamic>;
+      if (snapshot.exists && snapshot.data() != null) {
+        Map<String, dynamic> userData = snapshot.data() as Map<String, dynamic>;
 
-      controllers.forEach((key, controller) {
-        controller.text =
-            userData[key.toLowerCase().replaceAll('', '')] ??
-            _defaultValues(key);
-      });
+        controllers.forEach((key, controller) {
+          controller.text =
+              userData[key.toLowerCase().replaceAll('', '')] ??
+              _defaultValues(key);
+        });
 
-      // Load emergency contacts
-      if (userData["emergencyContacts"] != null &&
-          userData["emergencyContacts"] is List) {
-        emergencyContacts = List<Map<String, String>>.from(
-          (userData["emergencyContacts"] as List<dynamic>).map((contact) {
-            return {
-              "name": (contact["name"] ?? "").toString(),
-              "Phone": (contact["phone"] ?? "").toString(),
-            };
-          }),
-        );
+        // Load emergency contacts
+        if (userData["emergencyContacts"] != null &&
+            userData["emergencyContacts"] is List) {
+          emergencyContacts = List<Map<String, String>>.from(
+            (userData["emergencyContacts"] as List<dynamic>).map((contact) {
+              return {
+                "name": (contact["name"] ?? "").toString(),
+                "Phone": (contact["phone"] ?? "").toString(),
+              };
+            }),
+          );
+        }
       }
     }
-      setState(() {
+    setState(() {
       isLoading = false;
     });
   }
@@ -133,13 +135,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     String? userId = prefs.getString('userId');
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => EditUserScreen(userEmail: userId!),
-      ),
-    ).then((_) => setState(() {}));
+    if (userId != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EditUserScreen(userEmail: userId),
+        ),
+      ).then((_) => setState(() {}));
     }
+  }
 
   void _manageEmergencyContacts() {
     Navigator.push(
