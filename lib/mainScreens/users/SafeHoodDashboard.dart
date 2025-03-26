@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:safehome/mainScreens/users/community/VisitorEntryScreen.dart';
 import 'package:safehome/mainScreens/users/community/friend_list_screen.dart';
 import 'package:safehome/mainScreens/users/community/todo_list_screen.dart';
-import 'package:safehome/subScreens/community/upcoming_events_screen.dart';
 import 'package:safehome/mainScreens/users/service/CommunityNoticeBoard.dart';
 import 'package:safehome/mainScreens/users/service/CommunityRulesApp.dart';
 import 'package:safehome/mainScreens/users/service/MaintenanceRequestsScreen.dart';
 import 'package:safehome/mainScreens/users/service/StaffDirectoryPage.dart';
+import 'package:safehome/mainScreens/users/service/UpcomingEvents.dart';
 import 'package:safehome/mainScreens/users/service/complaint_screen.dart';
 import 'package:safehome/mainScreens/users/community/neighbor_profile_screen.dart';
 
