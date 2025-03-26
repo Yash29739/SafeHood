@@ -41,10 +41,22 @@ class _UpcomingEventsScreenState extends State<UpcomingEventsScreen> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextField(controller: titleController, decoration: const InputDecoration(labelText: "Title")),
-              TextField(controller: descriptionController, decoration: const InputDecoration(labelText: "Description")),
-              TextField(controller: categoryController, decoration: const InputDecoration(labelText: "Category")),
-              TextField(controller: locationController, decoration: const InputDecoration(labelText: "Location")),
+              TextField(
+                controller: titleController,
+                decoration: const InputDecoration(labelText: "Title"),
+              ),
+              TextField(
+                controller: descriptionController,
+                decoration: const InputDecoration(labelText: "Description"),
+              ),
+              TextField(
+                controller: categoryController,
+                decoration: const InputDecoration(labelText: "Category"),
+              ),
+              TextField(
+                controller: locationController,
+                decoration: const InputDecoration(labelText: "Location"),
+              ),
               const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () async {
@@ -60,7 +72,9 @@ class _UpcomingEventsScreenState extends State<UpcomingEventsScreen> {
                     });
                   }
                 },
-                child: Text("Select Date: ${selectedDate.toLocal()}".split(' ')[0]),
+                child: Text(
+                  "Select Date: ${selectedDate.toLocal()}".split(' ')[0],
+                ),
               ),
             ],
           ),
@@ -74,13 +88,15 @@ class _UpcomingEventsScreenState extends State<UpcomingEventsScreen> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  events.add(Event(
-                    title: titleController.text,
-                    description: descriptionController.text,
-                    category: categoryController.text,
-                    date: "${selectedDate.toLocal()}".split(' ')[0],
-                    location: locationController.text,
-                  ));
+                  events.add(
+                    Event(
+                      title: titleController.text,
+                      description: descriptionController.text,
+                      category: categoryController.text,
+                      date: "${selectedDate.toLocal()}".split(' ')[0],
+                      location: locationController.text,
+                    ),
+                  );
                 });
                 Navigator.pop(context);
               },
@@ -122,31 +138,34 @@ class _UpcomingEventsScreenState extends State<UpcomingEventsScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: events.isEmpty
-            ? const Center(child: Text("No events available. Add one!"))
-            : ListView.builder(
-                itemCount: events.length,
-                itemBuilder: (context, index) {
-                  final event = events[index];
-                  return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    child: ListTile(
-                      title: Text(event.title),
-                      subtitle: Text("${event.description}\nLocation: ${event.location}"),
-                      trailing: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(event.date),
-                          IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => _deleteEvent(index),
-                          ),
-                        ],
+        child:
+            events.isEmpty
+                ? const Center(child: Text("No events available. Add one!"))
+                : ListView.builder(
+                  itemCount: events.length,
+                  itemBuilder: (context, index) {
+                    final event = events[index];
+                    return Card(
+                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      child: ListTile(
+                        title: Text(event.title),
+                        subtitle: Text(
+                          "${event.description}\nLocation: ${event.location}",
+                        ),
+                        trailing: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(event.date),
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () => _deleteEvent(index),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
+                    );
+                  },
+                ),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.purple,

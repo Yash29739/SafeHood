@@ -1,31 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:safehome/subScreens/SecurityGrids/access_control.dart';
-import 'package:safehome/subScreens/SecurityGrids/emergency_contact.dart';
-import 'package:safehome/subScreens/SecurityGrids/gaurd_patrol.dart';
-import 'package:safehome/subScreens/SecurityGrids/incident_report.dart';
-import 'package:safehome/subScreens/SecurityGrids/security_setting.dart';
-import 'package:safehome/subScreens/SecurityGrids/visitor_log.dart';
-
+import 'package:safehome/mainScreens/SecurityGrids/access_control.dart';
+import 'package:safehome/mainScreens/SecurityGrids/emergency_contact.dart';
+import 'package:safehome/mainScreens/SecurityGrids/gaurd_patrol.dart';
+import 'package:safehome/mainScreens/SecurityGrids/incident_report.dart';
+import 'package:safehome/mainScreens/SecurityGrids/security_setting.dart';
+import 'package:safehome/mainScreens/SecurityGrids/visitor_log.dart';
 
 void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: SecurityDashboard(),
-  ));
+  runApp(
+    MaterialApp(debugShowCheckedModeBanner: false, home: SecurityDashboard()),
+  );
 }
 
 class SecurityDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Security Dashboard"),
-        backgroundColor: Color.fromARGB(255, 188, 53, 196),
-      ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(10.0),
         child: GridView.count(
-          crossAxisCount: 2,
+          crossAxisCount: 3,
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
           children: [

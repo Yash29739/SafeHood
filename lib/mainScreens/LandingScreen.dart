@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:safehome/mainScreens/NearbyShops.dart';
-import 'package:safehome/mainScreens/Profile.dart';
-import 'package:safehome/mainScreens/SafeHoodDashboard.dart';
+import 'package:safehome/mainScreens/users/NearbyShops.dart';
+import 'package:safehome/mainScreens/profile/Profile.dart';
+import 'package:safehome/mainScreens/users/SafeHoodDashboard.dart';
+import 'package:safehome/mainScreens/admins/AdminNearByShops.dart';
 import 'package:safehome/mainScreens/admins/dashbroadadmin.dart';
 import 'package:safehome/mainScreens/chat.dart';
-import 'package:safehome/mainScreens/security_dashboard.dart';
+import 'package:safehome/mainScreens/SecurityGrids/security_dashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LandingScreen extends StatefulWidget {
@@ -30,10 +31,7 @@ class _LandingScreenState extends State<LandingScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString("userId");
     DocumentSnapshot userDoc =
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userId)
-            .get();
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
     if (userDoc.exists) {
       setState(() {
         role = userDoc["role"];
@@ -42,7 +40,7 @@ class _LandingScreenState extends State<LandingScreen> {
     } else {
       configurePages();
     }
-    }
+  }
 
   void configurePages() {
     switch (role) {
@@ -50,7 +48,7 @@ class _LandingScreenState extends State<LandingScreen> {
         _pages = [
           AdminDashboard(),
           const ApartmentChatScreen(),
-          const NearByShops(),
+          const AdminNearByShops(),
           const ProfileScreen(),
         ];
         break;
