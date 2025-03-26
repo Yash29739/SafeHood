@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:safehome/login_signup/login_screen.dart';
 import 'package:safehome/services/firestore_service.dart';
 import 'package:safehome/services/localServices.dart';
-import 'package:safehome/subScreens/editingScreen.dart';
+import 'package:safehome/mainScreens/profile/editingScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
