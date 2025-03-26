@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:safehome/mainScreens/admins/Manage%20Complaints.dart';
 
 void main() {
   runApp(const MaterialApp(
@@ -62,13 +63,7 @@ class AdminDashboard extends StatelessWidget {
 }
 
 // Screen Classes
-class ManageComplaintsScreen extends StatelessWidget {
-  const ManageComplaintsScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return _buildScreen(context, "Manage Complaints");
-  }
-}
+
 
 class AddNoticeScreen extends StatelessWidget {
   const AddNoticeScreen({super.key});
@@ -141,3 +136,5 @@ Widget _buildScreen(BuildContext context, String title) {
     ),
   );
 }
+
+
