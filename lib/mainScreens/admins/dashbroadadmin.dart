@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+
 import 'package:safehome/mainScreens/admins/Manage%20Complaints.dart';
+import 'package:safehome/mainScreens/admins/Manage%20Residents,dart';
+import 'package:safehome/mainScreens/admins/admin%20manage%20events.dart';
+import 'package:safehome/mainScreens/admins/adminAddNotices.dart';
+import 'package:safehome/mainScreens/admins/adminManage%20Staff.dart';
+
 
 void main() {
   runApp(const MaterialApp(
@@ -23,11 +29,11 @@ class AdminDashboard extends StatelessWidget {
           mainAxisSpacing: 10,
           children: [
             _buildGridItem(context, "Manage Complaints", Icons.report, const ManageComplaintsScreen()),
-            _buildGridItem(context, "Add Notices", Icons.announcement, const AddNoticeScreen()),
-            _buildGridItem(context, "Manage Events", Icons.event, const ManageEventsScreen()),
+            _buildGridItem(context, "Add Notices", Icons.announcement,  AdminNoticeBoard()),
+            _buildGridItem(context, "Manage Events", Icons.event, const AdminEventsScreen()),
             _buildGridItem(context, "Visitor Logs", Icons.group, const ManageVisitorsScreen()),
-            _buildGridItem(context, "Manage Staff", Icons.people, const ManageStaffScreen()),
-            _buildGridItem(context, "Manage Residents", Icons.person, const ManageResidentsScreen()),
+            _buildGridItem(context, "Manage Staff", Icons.people,  AdminStaffManagementPage()),
+            _buildGridItem(context, "Manage Residents", Icons.person, const AdminNeighborManagementScreen()),
             _buildGridItem(context, "Security Management", Icons.security, const SecurityManagementScreen()),
             _buildGridItem(context, "Broadcast Messages", Icons.message, const BroadcastMessagesScreen()),
           ],
@@ -62,16 +68,11 @@ class AdminDashboard extends StatelessWidget {
   }
 }
 
+
+
 // Screen Classes
 
 
-class AddNoticeScreen extends StatelessWidget {
-  const AddNoticeScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return _buildScreen(context, "Add Notices");
-  }
-}
 
 class ManageEventsScreen extends StatelessWidget {
   const ManageEventsScreen({super.key});
@@ -89,21 +90,8 @@ class ManageVisitorsScreen extends StatelessWidget {
   }
 }
 
-class ManageStaffScreen extends StatelessWidget {
-  const ManageStaffScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return _buildScreen(context, "Manage Staff");
-  }
-}
 
-class ManageResidentsScreen extends StatelessWidget {
-  const ManageResidentsScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return _buildScreen(context, "Manage Residents");
-  }
-}
+
 
 class SecurityManagementScreen extends StatelessWidget {
   const SecurityManagementScreen({super.key});
