@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:safehome/mainScreens/admins/Manage%20Complaints.dart';
-import 'package:safehome/mainScreens/admins/Manage%20Residents,dart';
-import 'package:safehome/mainScreens/admins/admin%20manage%20events.dart';
+import 'package:safehome/mainScreens/admins/ManageComplaints.dart';
+import 'package:safehome/mainScreens/admins/ManageResidents.dart' ;
+import 'package:safehome/mainScreens/admins/adminSecurityManagement.dart';
+
+import 'package:safehome/mainScreens/admins/adminmanageevents.dart';
 import 'package:safehome/mainScreens/admins/adminAddNotices.dart';
-import 'package:safehome/mainScreens/admins/adminManage%20Staff.dart';
+import 'package:safehome/mainScreens/admins/adminManageStaff.dart';
+import 'package:safehome/mainScreens/admins/adminrulesand%20regulation.dart';
+import 'package:safehome/mainScreens/admins/adminvisitors.dart';
+
 
 
 void main() {
@@ -31,11 +36,11 @@ class AdminDashboard extends StatelessWidget {
             _buildGridItem(context, "Manage Complaints", Icons.report, const ManageComplaintsScreen()),
             _buildGridItem(context, "Add Notices", Icons.announcement,  AdminNoticeBoard()),
             _buildGridItem(context, "Manage Events", Icons.event, const AdminEventsScreen()),
-            _buildGridItem(context, "Visitor Logs", Icons.group, const ManageVisitorsScreen()),
+            _buildGridItem(context, "Visitor Logs", Icons.group, const VisitorLogScreen()),
             _buildGridItem(context, "Manage Staff", Icons.people,  AdminStaffManagementPage()),
-            _buildGridItem(context, "Manage Residents", Icons.person, const AdminNeighborManagementScreen()),
+            _buildGridItem(context, "Manage Residents", Icons.person, const AdminNeighborManagementScreen ()),
             _buildGridItem(context, "Security Management", Icons.security, const SecurityManagementScreen()),
-            _buildGridItem(context, "Broadcast Messages", Icons.message, const BroadcastMessagesScreen()),
+            _buildGridItem(context, "ruless", Icons.message, const AdminRulesPage()),
           ],
         ),
       ),
@@ -93,13 +98,6 @@ class ManageVisitorsScreen extends StatelessWidget {
 
 
 
-class SecurityManagementScreen extends StatelessWidget {
-  const SecurityManagementScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return _buildScreen(context, "Security Management");
-  }
-}
 
 class BroadcastMessagesScreen extends StatelessWidget {
   const BroadcastMessagesScreen({super.key});

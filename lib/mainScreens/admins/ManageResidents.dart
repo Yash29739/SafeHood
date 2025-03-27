@@ -30,18 +30,79 @@ class _AdminNeighborManagementScreenState extends State<AdminNeighborManagementS
     Neighbor(name: 'Michael Johnson', age: 45, occupation: 'Doctor', phoneNumber: '345-678-9012', address: '91011 Maple Road'),
   ];
 
+  /// Function to show a dialog and add a new neighbor
   void _addNeighbor() {
-    setState(() {
-      neighbors.add(Neighbor(
-        name: "New Neighbor",
-        age: 0,
-        occupation: "Unknown",
-        phoneNumber: "000-000-0000",
-        address: "Unknown",
-      ));
-    });
+    String name = '';
+    int age = 0;
+    String occupation = '';
+    String phoneNumber = '';
+    String address = '';
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Add New Neighbor"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                decoration: const InputDecoration(labelText: "Name"),
+                onChanged: (value) => name = value,
+              ),
+              TextField(
+                decoration: const InputDecoration(labelText: "Age"),
+                keyboardType: TextInputType.number,
+                onChanged: (value) => age = int.tryParse(value) ?? 0,
+              ),
+              TextField(
+                decoration: const InputDecoration(labelText: "Occupation"),
+                onChanged: (value) => occupation = value,
+              ),
+              TextField(
+                decoration: const InputDecoration(labelText: "Phone Number"),
+                keyboardType: TextInputType.phone,
+                onChanged: (value) => phoneNumber = value,
+              ),
+              TextField(
+                decoration: const InputDecoration(labelText: "Address"),
+                onChanged: (value) => address = value,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                if (name.isNotEmpty && occupation.isNotEmpty && phoneNumber.isNotEmpty && address.isNotEmpty) {
+                  setState(() {
+                    neighbors.add(Neighbor(
+                      name: name,
+                      age: age,
+                      occupation: occupation,
+                      phoneNumber: phoneNumber,
+                      address: address,
+                    ));
+                  });
+                  Navigator.pop(context);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Please fill all fields"))
+                  );
+                }
+              },
+              child: const Text("Add"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
+  /// Function to remove a neighbor from the list
   void _removeNeighbor(int index) {
     setState(() {
       neighbors.removeAt(index);
@@ -137,6 +198,7 @@ class _AdminNeighborManagementScreenState extends State<AdminNeighborManagementS
     );
   }
 
+  /// Custom header for the app bar
   Widget _buildHeader() {
     return Row(
       children: [
@@ -147,7 +209,9 @@ class _AdminNeighborManagementScreenState extends State<AdminNeighborManagementS
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(50),
-            child: Image.asset("assets/logo.jpg", height: 60),
+            child: Image.asset("assets/logo.jpg", height: 60, errorBuilder: (context, error, stackTrace) {
+              return Icon(Icons.person, size: 60, color: Colors.white);
+            }),
           ),
         ),
         const SizedBox(width: 10),
