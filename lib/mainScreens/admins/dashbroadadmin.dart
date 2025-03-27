@@ -1,18 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:safehome/mainScreens/admins/Manage%20Complaints.dart';
-import 'package:safehome/mainScreens/admins/Manage%20Residents,dart';
-import 'package:safehome/mainScreens/admins/admin%20manage%20events.dart';
+import 'package:safehome/mainScreens/admins/ManageComplaints.dart';
+import 'package:safehome/mainScreens/admins/ManageResidents.dart';
+import 'package:safehome/mainScreens/admins/adminManageEvents.dart';
 import 'package:safehome/mainScreens/admins/adminAddNotices.dart';
-import 'package:safehome/mainScreens/admins/adminManage%20Staff.dart';
-
-
-void main() {
-  runApp(const MaterialApp(
-    home: AdminDashboard(),
-    debugShowCheckedModeBanner: false,
-  ));
-}
+import 'package:safehome/mainScreens/admins/adminManageStaff.dart';
 
 class AdminDashboard extends StatelessWidget {
   const AdminDashboard({super.key});
@@ -20,7 +12,6 @@ class AdminDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: GridView.count(
@@ -28,24 +19,72 @@ class AdminDashboard extends StatelessWidget {
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
           children: [
-            _buildGridItem(context, "Manage Complaints", Icons.report, const ManageComplaintsScreen()),
-            _buildGridItem(context, "Add Notices", Icons.announcement,  AdminNoticeBoard()),
-            _buildGridItem(context, "Manage Events", Icons.event, const AdminEventsScreen()),
-            _buildGridItem(context, "Visitor Logs", Icons.group, const ManageVisitorsScreen()),
-            _buildGridItem(context, "Manage Staff", Icons.people,  AdminStaffManagementPage()),
-            _buildGridItem(context, "Manage Residents", Icons.person, const AdminNeighborManagementScreen()),
-            _buildGridItem(context, "Security Management", Icons.security, const SecurityManagementScreen()),
-            _buildGridItem(context, "Broadcast Messages", Icons.message, const BroadcastMessagesScreen()),
+            _buildGridItem(
+              context,
+              "Manage Complaints",
+              Icons.report,
+              const ManageComplaintsScreen(),
+            ),
+            _buildGridItem(
+              context,
+              "Add Notices",
+              Icons.announcement,
+              AdminNoticeBoard(),
+            ),
+            _buildGridItem(
+              context,
+              "Manage Events",
+              Icons.event,
+              const AdminEventsScreen(),
+            ),
+            _buildGridItem(
+              context,
+              "Visitor Logs",
+              Icons.group,
+              const ManageVisitorsScreen(),
+            ),
+            _buildGridItem(
+              context,
+              "Manage Staff",
+              Icons.people,
+              AdminStaffManagementPage(),
+            ),
+            _buildGridItem(
+              context,
+              "Manage Residents",
+              Icons.person,
+              const AdminNeighborManagementScreen(),
+            ),
+            _buildGridItem(
+              context,
+              "Security Management",
+              Icons.security,
+              const SecurityManagementScreen(),
+            ),
+            _buildGridItem(
+              context,
+              "Broadcast Messages",
+              Icons.message,
+              const BroadcastMessagesScreen(),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildGridItem(BuildContext context, String title, IconData icon, Widget screen) {
+  Widget _buildGridItem(
+    BuildContext context,
+    String title,
+    IconData icon,
+    Widget screen,
+  ) {
     return ElevatedButton(
       onPressed: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => screen),
+        );
       },
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.all(10),
@@ -60,7 +99,11 @@ class AdminDashboard extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
           ),
         ],
       ),
@@ -68,11 +111,7 @@ class AdminDashboard extends StatelessWidget {
   }
 }
 
-
-
 // Screen Classes
-
-
 
 class ManageEventsScreen extends StatelessWidget {
   const ManageEventsScreen({super.key});
@@ -89,9 +128,6 @@ class ManageVisitorsScreen extends StatelessWidget {
     return _buildScreen(context, "Visitor Logs");
   }
 }
-
-
-
 
 class SecurityManagementScreen extends StatelessWidget {
   const SecurityManagementScreen({super.key});
@@ -112,10 +148,7 @@ class BroadcastMessagesScreen extends StatelessWidget {
 // Utility Function for Screens
 Widget _buildScreen(BuildContext context, String title) {
   return Scaffold(
-    appBar: AppBar(
-      title: Text(title),
-      backgroundColor: Colors.deepPurple,
-    ),
+    appBar: AppBar(title: Text(title), backgroundColor: Colors.deepPurple),
     body: Center(
       child: Text(
         "$title Screen",
@@ -124,5 +157,3 @@ Widget _buildScreen(BuildContext context, String title) {
     ),
   );
 }
-
-

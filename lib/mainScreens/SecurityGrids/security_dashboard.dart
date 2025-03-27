@@ -4,12 +4,6 @@ import 'package:safehome/mainScreens/SecurityGrids/gaurd_patrol.dart';
 import 'package:safehome/mainScreens/SecurityGrids/incident_report.dart';
 import 'package:safehome/mainScreens/SecurityGrids/visitor_log.dart';
 
-void main() {
-  runApp(
-    MaterialApp(debugShowCheckedModeBanner: false, home: SecurityDashboard()),
-  );
-}
-
 class SecurityDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

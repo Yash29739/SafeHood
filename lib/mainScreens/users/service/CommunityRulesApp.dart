@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const CommunityRulesApp());
-}
-
 class CommunityRulesApp extends StatelessWidget {
   const CommunityRulesApp({super.key});
 

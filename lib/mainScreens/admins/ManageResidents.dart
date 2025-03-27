@@ -20,25 +20,47 @@ class AdminNeighborManagementScreen extends StatefulWidget {
   const AdminNeighborManagementScreen({super.key});
 
   @override
-  _AdminNeighborManagementScreenState createState() => _AdminNeighborManagementScreenState();
+  _AdminNeighborManagementScreenState createState() =>
+      _AdminNeighborManagementScreenState();
 }
 
-class _AdminNeighborManagementScreenState extends State<AdminNeighborManagementScreen> {
+class _AdminNeighborManagementScreenState
+    extends State<AdminNeighborManagementScreen> {
   List<Neighbor> neighbors = [
-    Neighbor(name: 'John Doe', age: 32, occupation: 'Engineer', phoneNumber: '123-456-7890', address: '1234 Elm Street'),
-    Neighbor(name: 'Jane Smith', age: 28, occupation: 'Teacher', phoneNumber: '234-567-8901', address: '5678 Oak Avenue'),
-    Neighbor(name: 'Michael Johnson', age: 45, occupation: 'Doctor', phoneNumber: '345-678-9012', address: '91011 Maple Road'),
+    Neighbor(
+      name: 'John Doe',
+      age: 32,
+      occupation: 'Engineer',
+      phoneNumber: '123-456-7890',
+      address: '1234 Elm Street',
+    ),
+    Neighbor(
+      name: 'Jane Smith',
+      age: 28,
+      occupation: 'Teacher',
+      phoneNumber: '234-567-8901',
+      address: '5678 Oak Avenue',
+    ),
+    Neighbor(
+      name: 'Michael Johnson',
+      age: 45,
+      occupation: 'Doctor',
+      phoneNumber: '345-678-9012',
+      address: '91011 Maple Road',
+    ),
   ];
 
   void _addNeighbor() {
     setState(() {
-      neighbors.add(Neighbor(
-        name: "New Neighbor",
-        age: 0,
-        occupation: "Unknown",
-        phoneNumber: "000-000-0000",
-        address: "Unknown",
-      ));
+      neighbors.add(
+        Neighbor(
+          name: "New Neighbor",
+          age: 0,
+          occupation: "Unknown",
+          phoneNumber: "000-000-0000",
+          address: "Unknown",
+        ),
+      );
     });
   }
 
@@ -88,7 +110,9 @@ class _AdminNeighborManagementScreenState extends State<AdminNeighborManagementS
                           ),
                         ),
                         title: Text(neighbor.name),
-                        subtitle: Text('Age: ${neighbor.age} | Occupation: ${neighbor.occupation}'),
+                        subtitle: Text(
+                          'Age: ${neighbor.age} | Occupation: ${neighbor.occupation}',
+                        ),
                         onTap: () {
                           showDialog(
                             context: context,
@@ -124,11 +148,16 @@ class _AdminNeighborManagementScreenState extends State<AdminNeighborManagementS
             ElevatedButton.icon(
               onPressed: _addNeighbor,
               icon: Icon(Icons.add, color: Colors.white),
-              label: Text("Add Neighbor", style: TextStyle(color: Colors.white)),
+              label: Text(
+                "Add Neighbor",
+                style: TextStyle(color: Colors.white),
+              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
                 padding: EdgeInsets.symmetric(vertical: 12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
           ],
