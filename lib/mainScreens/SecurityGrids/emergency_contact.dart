@@ -31,34 +31,89 @@ class _EmergencyContactsPageState extends State<EmergencyContactsPage> {
   }
 
   void _showAddContactDialog() {
-    showDialog(
+    showModalBottomSheet(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Add Emergency Contact"),
-        content: Column(
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          left: 16,
+          right: 16,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+          top: 20,
+        ),
+        child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Text(
+              "Add Emergency Contact",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 148, 45, 148),
+              ),
+            ),
+            SizedBox(height: 12),
             TextField(
               controller: nameController,
-              decoration: InputDecoration(labelText: "Contact Name"),
+              decoration: InputDecoration(
+                labelText: "Contact Name",
+                prefixIcon: Icon(Icons.person, color: Color.fromARGB(255, 148, 45, 148)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
             ),
+            SizedBox(height: 12),
             TextField(
               controller: phoneController,
-              decoration: InputDecoration(labelText: "Phone Number"),
               keyboardType: TextInputType.phone,
+              decoration: InputDecoration(
+                labelText: "Phone Number",
+                prefixIcon: Icon(Icons.phone, color: Color.fromARGB(255, 148, 45, 148)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 148, 45, 148),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    ),
+                    child: Text(
+                      "Cancel",
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                ElevatedButton.icon(
+                  onPressed: _addEmergencyContact,
+                  icon: Icon(Icons.add),
+                  label: Text("Add"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 148, 45, 148),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text("Cancel"),
-          ),
-          ElevatedButton(
-            onPressed: _addEmergencyContact,
-            child: Text("Add"),
-          ),
-        ],
       ),
     );
   }
@@ -79,12 +134,12 @@ class _EmergencyContactsPageState extends State<EmergencyContactsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Emergency Contacts"),
-        backgroundColor:const Color.fromARGB(255, 196, 62, 196),
+        backgroundColor: Color.fromARGB(255, 196, 62, 196),
       ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.purple.shade100, const Color.fromARGB(255, 208, 135, 223)],
+            colors: [Colors.purple.shade100, Color.fromARGB(255, 193, 164, 199)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -109,7 +164,7 @@ class _EmergencyContactsPageState extends State<EmergencyContactsPage> {
                   contact["name"]!,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: const Color.fromARGB(255, 223, 103, 245),
+                    color: Color.fromARGB(255, 148, 45, 148),
                   ),
                 ),
                 subtitle: Text(
@@ -127,7 +182,7 @@ class _EmergencyContactsPageState extends State<EmergencyContactsPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddContactDialog,
-        backgroundColor:const Color.fromARGB(255, 196, 62, 196),
+        backgroundColor: Color.fromARGB(255, 196, 62, 196),
         child: Icon(Icons.add, color: Colors.white),
       ),
     );
