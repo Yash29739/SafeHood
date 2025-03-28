@@ -12,12 +12,6 @@ import 'package:safehome/mainScreens/admins/adminvisitors.dart';
 
 
 
-void main() {
-  runApp(const MaterialApp(
-    home: AdminDashboard(),
-    debugShowCheckedModeBanner: false,
-  ));
-}
 
 class AdminDashboard extends StatelessWidget {
   const AdminDashboard({super.key});
