@@ -1,16 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:safehome/mainScreens/SecurityGrids/access_control.dart';
 import 'package:safehome/mainScreens/SecurityGrids/emergency_contact.dart';
 import 'package:safehome/mainScreens/SecurityGrids/gaurd_patrol.dart';
 import 'package:safehome/mainScreens/SecurityGrids/incident_report.dart';
-import 'package:safehome/mainScreens/SecurityGrids/security_setting.dart';
 import 'package:safehome/mainScreens/SecurityGrids/visitor_log.dart';
-
-void main() {
-  runApp(
-    MaterialApp(debugShowCheckedModeBanner: false, home: SecurityDashboard()),
-  );
-}
 
 class SecurityDashboard extends StatelessWidget {
   @override
@@ -29,11 +21,6 @@ class SecurityDashboard extends StatelessWidget {
               onTap: () => _navigateTo(context, VisitorLogsPage()),
             ),
             DashboardCard(
-              title: "Access Control",
-              icon: Icons.lock,
-              onTap: () => _navigateTo(context, AccessControlPage()),
-            ),
-            DashboardCard(
               title: "Incident Reports",
               icon: Icons.warning,
               onTap: () => _navigateTo(context, IncidentReportsPage()),
@@ -47,11 +34,6 @@ class SecurityDashboard extends StatelessWidget {
               title: "Guard Patrol",
               icon: Icons.directions_walk,
               onTap: () => _navigateTo(context, GuardPatrolPage()),
-            ),
-            DashboardCard(
-              title: "Settings",
-              icon: Icons.settings,
-              onTap: () => _navigateTo(context, SettingsPage()),
             ),
           ],
         ),

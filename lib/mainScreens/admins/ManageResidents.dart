@@ -20,6 +20,7 @@ class AdminNeighborManagementScreen extends StatefulWidget {
   const AdminNeighborManagementScreen({super.key});
 
   @override
+
   _AdminNeighborManagementScreenState createState() => _AdminNeighborManagementScreenState();
 }
 
@@ -103,6 +104,7 @@ class _AdminNeighborManagementScreenState extends State<AdminNeighborManagementS
   }
 
   /// Function to remove a neighbor from the list
+
   void _removeNeighbor(int index) {
     setState(() {
       neighbors.removeAt(index);
@@ -150,6 +152,7 @@ class _AdminNeighborManagementScreenState extends State<AdminNeighborManagementS
                         ),
                         title: Text(neighbor.name),
                         subtitle: Text('Age: ${neighbor.age} | Occupation: ${neighbor.occupation}'),
+
                         onTap: () {
                           showDialog(
                             context: context,
@@ -199,6 +202,7 @@ class _AdminNeighborManagementScreenState extends State<AdminNeighborManagementS
   }
 
   /// Custom header for the app bar
+
   Widget _buildHeader() {
     return Row(
       children: [
@@ -212,6 +216,7 @@ class _AdminNeighborManagementScreenState extends State<AdminNeighborManagementS
             child: Image.asset("assets/logo.jpg", height: 60, errorBuilder: (context, error, stackTrace) {
               return Icon(Icons.person, size: 60, color: Colors.white);
             }),
+
           ),
         ),
         const SizedBox(width: 10),

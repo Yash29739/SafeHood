@@ -25,22 +25,31 @@ class _GuardPatrolPageState extends State<GuardPatrolPage> {
     },
   ];
 
-  final TextEditingController locationController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
+  String? selectedLocation;
+
+  final List<String> locations = [
+    "Main Gate",
+    "Back Entrance",
+    "Parking Lot",
+    "Lobby",
+    "Office Area",
+    "CCTV Room",
+  ];
 
   void _addPatrolLog() {
-    if (locationController.text.isNotEmpty) {
+    if (selectedLocation != null) {
       setState(() {
         patrolLogs.insert(
           0,
           {
-            "location": locationController.text,
+            "location": selectedLocation!,
             "notes": notesController.text.isEmpty ? "No additional notes" : notesController.text,
             "time": DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
           },
         );
       });
-      locationController.clear();
+      selectedLocation = null;
       notesController.clear();
       Navigator.pop(context);
     }
@@ -49,36 +58,66 @@ class _GuardPatrolPageState extends State<GuardPatrolPage> {
   void _showAddPatrolDialog() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Colors.deepPurple.shade50,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        title: Text("Log Patrol Check-In", style: TextStyle(color: Colors.deepPurple)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: locationController,
-              decoration: InputDecoration(labelText: "Location", border: OutlineInputBorder()),
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            backgroundColor: Colors.deepPurple.shade50,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            title: Text("Log Patrol Check-In", style: TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold)),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.deepPurple),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: DropdownButton<String>(
+                      value: selectedLocation,
+                      hint: Text("Select Location", style: TextStyle(color: Colors.deepPurple)),
+                      isExpanded: true,
+                      underline: SizedBox(),
+                      icon: Icon(Icons.arrow_drop_down, color: Colors.deepPurple),
+                      items: locations.map((location) {
+                        return DropdownMenuItem(
+                          value: location,
+                          child: Text(location),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedLocation = value;
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  TextField(
+                    controller: notesController,
+                    decoration: InputDecoration(
+                      labelText: "Notes (Optional)",
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    maxLines: 3,
+                  ),
+                ],
+              ),
             ),
-            SizedBox(height: 10),
-            TextField(
-              controller: notesController,
-              decoration: InputDecoration(labelText: "Notes (Optional)", border: OutlineInputBorder()),
-              maxLines: 3,
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text("Cancel", style: TextStyle(color: Colors.red)),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 166, 52, 155)),
-            onPressed: _addPatrolLog,
-            child: Text("Log",style: TextStyle(color: const Color.fromARGB(255, 40, 6, 39))),
-          ),
-        ],
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text("Cancel", style: TextStyle(color: Colors.red)),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
+                onPressed: _addPatrolLog,
+                child: Text("Log", style: TextStyle(color: Colors.white)),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -88,12 +127,12 @@ class _GuardPatrolPageState extends State<GuardPatrolPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Guard Patrol Logs"),
-        backgroundColor:const Color.fromARGB(255, 196, 62, 196),
+        backgroundColor: const Color.fromARGB(255, 196, 62, 196),
       ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors:[Colors.purple.shade100, const Color.fromARGB(255, 208, 135, 223)],
+            colors: [Colors.purple.shade100, const Color.fromARGB(255, 193, 164, 199)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -128,7 +167,7 @@ class _GuardPatrolPageState extends State<GuardPatrolPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddPatrolDialog,
-        backgroundColor:const Color.fromARGB(255, 175, 65, 176),
+        backgroundColor: const Color.fromARGB(255, 175, 65, 176),
         child: Icon(Icons.add, color: Colors.white),
       ),
     );

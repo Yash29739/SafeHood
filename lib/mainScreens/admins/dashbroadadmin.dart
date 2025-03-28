@@ -11,15 +11,12 @@ import 'package:safehome/mainScreens/admins/adminrulesand%20regulation.dart';
 import 'package:safehome/mainScreens/admins/adminvisitors.dart';
 
 
-
-
 class AdminDashboard extends StatelessWidget {
   const AdminDashboard({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: GridView.count(
@@ -41,10 +38,18 @@ class AdminDashboard extends StatelessWidget {
     );
   }
 
-  Widget _buildGridItem(BuildContext context, String title, IconData icon, Widget screen) {
+  Widget _buildGridItem(
+    BuildContext context,
+    String title,
+    IconData icon,
+    Widget screen,
+  ) {
     return ElevatedButton(
       onPressed: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => screen),
+        );
       },
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.all(10),
@@ -59,7 +64,11 @@ class AdminDashboard extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
           ),
         ],
       ),
@@ -67,11 +76,7 @@ class AdminDashboard extends StatelessWidget {
   }
 }
 
-
-
 // Screen Classes
-
-
 
 class ManageEventsScreen extends StatelessWidget {
   const ManageEventsScreen({super.key});
@@ -93,6 +98,7 @@ class ManageVisitorsScreen extends StatelessWidget {
 
 
 
+
 class BroadcastMessagesScreen extends StatelessWidget {
   const BroadcastMessagesScreen({super.key});
   @override
@@ -104,10 +110,7 @@ class BroadcastMessagesScreen extends StatelessWidget {
 // Utility Function for Screens
 Widget _buildScreen(BuildContext context, String title) {
   return Scaffold(
-    appBar: AppBar(
-      title: Text(title),
-      backgroundColor: Colors.deepPurple,
-    ),
+    appBar: AppBar(title: Text(title), backgroundColor: Colors.deepPurple),
     body: Center(
       child: Text(
         "$title Screen",
@@ -116,5 +119,3 @@ Widget _buildScreen(BuildContext context, String title) {
     ),
   );
 }
-
-
